@@ -1,0 +1,34 @@
+.top-menu {
+    background-color: #333;
+    padding: 10px 20px;
+    color: white;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.menu-list {
+    list-style: none;
+    display: flex;
+    justify-content: space-around;
+    margin: 0;
+    padding: 0;
+}
+
+.menu-list li {
+    margin: 0;
+}
+
+.menu-list a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+.menu-list a:hover {
+    background-color: #575757;
+    border-radius: 5px;
+}
