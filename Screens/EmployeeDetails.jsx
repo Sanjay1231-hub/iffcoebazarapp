@@ -1,387 +1,225 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, FlatList, Image, StyleSheet, ActivityIndicator, ScrollView  } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { LinearGradient } from 'expo-linear-gradient';
-import Constants from 'expo-constants';
+import { View, Text, Image, StyleSheet, ActivityIndicator, Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Make sure AsyncStorage is installed
 
-const EmployeeDetails = () => {
- 
-  //const apiKey = Constants.expoConfig?.extra?.apiKey;
-  const apiUrl = Constants.expoConfig?.extra?.apiUrl;
-  
-  const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
-  const [searchQuery, setSearchQuery] = useState('');
+const EmployeeDetails = ({ route }) => {
+  const { employee } = route.params; // Get employee data passed from EmployeeDetails
+  const [imageUrl, setImageUrl] = useState(null); // To store image URL (base64 string)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isVisible, setIsVisible] = useState(false); // Default to hidden
 
+  
   useEffect(() => {
-    if (!apiUrl) {
-      setError('API URL is missing');
-      setLoading(false);
-      return;
-    }
+    fetchData();
+  }, []); // Fetch data when component mounts
 
-    const buildUrl = (baseUrl, endpoint) => `${baseUrl.replace(/\/+$/, '')}/${endpoint.replace(/^\/+/, '')}`;
-    const url = buildUrl(apiUrl, 'EmpDirectory/GetEmpDirAllData');
+  const fetchData = async () => {
+    try {
+      const loggedInEmpStore = await AsyncStorage.getItem('officeCode');
+      const loggedUser = await AsyncStorage.getItem('username');
+      if (!loggedInEmpStore || !loggedUser) {
+        Alert.alert('Error', 'No store or user found');
+        return;
+      }
 
-    //fetch('https://reactapi.iffco.coop/EmpDirectory/GetEmpDirAllData')
-    fetch(url)
-      .then(response => response.json())
-      .then(result => {
-        console.log(result);
-        setData(result);
-        setFilteredData(result);
-        setLoading(false);
-      })
-      .catch(error => {
-        setError(error);
-        setLoading(false);
+      const postData = {
+        token: "IEBL0001",
+        apiId: "4",
+        inApiParameters: [
+          { label: "P_PERSONAL_NO", value: `${employee.PERSONAL_NO}` }          
+        ],
+      };     
+
+      const response = await fetch('https://ebazarapi.iffco.in/API', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': 'ReactNativeApp/1.0',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(postData),
       });
-  }, []);
 
-  const handleSearch = (query) => {    
-    setSearchQuery(query);  
-    if (query.trim()) {     
-      const filtered = data.filter(item => 
-        item.PNO.toLowerCase().includes(query.toLowerCase()) ||
-        item.EMP_NAME.toLowerCase().includes(query.toLowerCase()) ||
-        item.OFFICE_CD.toLowerCase().includes(query.toLowerCase()) ||
-        item.EMP_DESIG.toLowerCase().includes(query.toLowerCase()) 
-      );     
-      setFilteredData(filtered);
-    } else {
-      // If query is empty, show all data
-      setFilteredData(data);
+      const text = await response.text();
+    
+      if (!response.ok) {
+        //console.warn('Non-200 response:', response.status);
+        //console.warn('Raw response body:', text);
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      let result;
+      try {
+        result = JSON.parse(text);
+      } catch (jsonError) {
+        //console.error('Failed to parse JSON. Server returned:', text);
+        throw new Error('Invalid JSON response received.');
+      }
+
+      if (!result || typeof result !== 'object') {
+        throw new Error('Unexpected data format received.');
+      }
+      const userData = result.output[0];
+
+      if (userData && userData.EMP_PHOTO) {
+        setImageUrl(userData.EMP_PHOTO); // Set the base64 image string from API
+      } else {
+        setImageUrl(null); // No image found, set as null
+      }
+    } catch (error) {
+      setError('Failed to load image');
+      Alert.alert('Fetch Error', error.message); // Show error alert
+    } finally {
+      setLoading(false);
     }
   };
-
-  const myItemSeparator = () => {
-    return <View style={{ height: 1, backgroundColor: "grey",marginHorizontal:10}} />;
-    };
-  
-  const myListEmpty = () => {
-    return (
-      <View style={{ alignItems: "center" }}>
-      <Text style={styles.item1}>No data found</Text>
-      </View>
-    );
-  };
-  
-
-  const renderItem = ({ item }) => {
-    // Safely extract and convert item properties to strings
-    const empName = item?.EMP_NAME || 'N/A';
-    const empId = item?.PNO || 'N/A';
-    const officeCd = item?.OFFICE_CD || 'N/A';
-    const empDesig = item?.EMP_DESIG || 'N/A';
-    const email = item?.EMAIL && typeof item.EMAIL === 'object' ? item.EMAIL.value || 'N/A'  : item?.EMAIL || 'N/A';
-    const empRole = item?.EMP_ROLE || 'N/A';
-    const mobile1 = item?.MOBILE_NO_1 && typeof item.MOBILE_NO_1 === 'object' ? item.MOBILE_NO_1.value || 'N/A' : item?.MOBILE_NO_1 || 'N/A';
-    const status = item?.STATUS || 'N/A';
-    //const imageUrl = 'C:/Users/EZB/Documents/testing/React Native26082024/React Native/ReactProjectApp/assets/favicon.png';
-  
-    return (
-      <View style={styles.item}>
-        <View style={styles.row}>
-          <View style={styles.cell}>
-            <Text style={styles.bold}>Name:</Text>
-            <Text><Text style={styles.bold}>Pno:</Text> {String(empId)}</Text>
-            <Text><Text style={styles.bold}>Office Code:</Text> {String(officeCd)}</Text>
-            <Text><Text style={styles.bold}>Designation:</Text> {String(empDesig)}</Text>
-            <Text><Text style={styles.bold}>Email ID:</Text> {email}</Text>
-            <Text><Text style={styles.bold}>Employee Role:</Text> {String(empRole)}</Text>
-            <Text><Text style={styles.bold}>Mobile No:</Text> {mobile1}</Text>
-            <Text><Text style={styles.bold}>Status:</Text> {String(status)}</Text>
-          </View>
-          <View style={styles.cell}>
-            <Text style={styles.bold}>{String(empName)}</Text>
-            <Image source={require('../assets/face01.png')} style={styles.image} />
-          </View>
+  // Loading state
+  if (loading) {
+    return (    
+       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <View style={{ transform: [{ scale: 0.6 }] }}>
+          <ActivityIndicator size={50} color="#4a80f5" />
         </View>
-      </View>
-
-
+          <Text>Loading...</Text>
+        </View>
     );
-  };
-  
-{/* <View style={styles.row}>
-        <Text style={styles.cell}>{empId}</Text>
-        <Text style={styles.cell}>{empName}</Text>
-        <Text style={styles.cell}>{officeCd}</Text>
-        <Text style={styles.cell}>{empDesig}</Text>
-        <Text style={styles.cell}>{email}</Text>
-         <Text style={styles.cell}>{empRole}</Text>
-         <Text style={styles.cell}>{mobile1}</Text>
-         <Text style={styles.cell}>{status}</Text>
-      </View>  */}
-
-
-      if (loading) {
-        return <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />;
-      }
-    
-      if (error) {
-        return <Text style={styles.error}>{error}</Text>;
-      }
+  }
+  if (error) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.error}>{error}</Text>
+      </View>
+    );
+  } 
 
   return (
-    // <LinearGradient 
-    //   colors={['#e0eafc', '#cfdef3']} 
-    //   start={[0, 32]}
-    //   end={[0, 85]}
-    //   style={styles.gradient}
-    // >
-      <View style={styles.container}>
-      {/* <Text>Search...</Text> */}
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search..."
-        value={searchQuery}
-        onChangeText={handleSearch}
-      />
-      
-      {/* <View style={styles.searchContainer}>
-        <Icon name="search" size={20} color="gray" style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search..."
-          value={searchQuery}
-          onChangeText={handleSearch}
-        />
-      </View> */}
-
-
-
-      {/* Header Row */}
-      {/* <View style={styles.header}>
-        <Text style={styles.headerText}>Pno</Text>
-        <Text style={styles.headerText}>Emp Name</Text>
-        <Text style={styles.headerText}>Designation</Text>
-      </View> */}
-
-
-      {/* Data Rows */}
-      <FlatList
-        data={filteredData}
-        renderItem={renderItem}
-        keyExtractor={item => item.PNO.toLowerCase()}  // Ensure PNO is unique
-        style={styles.list} // Apply styles to the FlatList
-        ItemSeparatorComponent={myItemSeparator}
-      ListEmptyComponent={myListEmpty}
-      ListHeaderComponent={() =>         
-        {isVisible && (
-          <Text style={{ fontSize: 20, textAlign: "center",marginTop:10, marginBottom:5, fontWeight:600, color: '#888888' }}>
-          ------ Employees Details ------
-        </Text>
-        )}      
-    }
-      ListFooterComponent={() => (
-        <Text style={{ fontSize: 20, textAlign: "center",marginBottom:20,fontWeight:600, color: '#888888' }}>------</Text>
-      )}
-      />
-     </View>
-    //  </LinearGradient>
+    <View style={styles.container}>
+      <View style={styles.innerContainer}>
+        <View style={styles.headerContainer}> 
+           <View style={styles.imageContainer}>
+            {imageUrl ? (
+              <Image
+                source={{ uri: `data:image/jpeg;base64,${imageUrl}` }} // Assuming it's a JPEG image
+                style={styles.profileImage}
+              />
+            ) : (
+              <Text style={styles.noImageText}>No Image Available</Text>
+            )}
+          </View> 
+          <View style={styles.textContainer}>
+            <Text style={styles.name}>{employee.EMP_NAME}</Text>
+            <Text style={styles.designation}>{employee.DESIGNATION}</Text>
+          </View>
+        </View>
+        <View style={styles.detailsContainer}>
+          <Text style={styles.detailLabel}>Personal No</Text>
+          <Text style={styles.detailValue}>{employee.PERSONAL_NO}</Text>
+          <Text style={styles.detailLabel}>Department</Text>
+          <Text style={styles.detailValue}>{employee.DEPARTMENT || 'No data found'}</Text>
+          <Text style={styles.detailLabel}>Mobile</Text>
+          <Text style={styles.detailValue}>{employee.MOBILE_NO || 'No data found'}</Text>
+          <Text style={styles.detailLabel}>Email</Text>
+          <Text style={styles.detailValue}>{employee.EMAIL_ID || 'No data found'}</Text>
+          {(employee.DEPARTMENT === "STORE") && (
+                              <View>
+                                <Text style={styles.detailLabel}>Store Name</Text>
+                                <Text style={styles.detailValue}>{employee.STORE_NAME || 'No data found'}</Text>
+                                <Text style={styles.detailLabel}>State</Text>
+                                <Text style={styles.detailValue}>{employee.STATE_NAME || 'No data found'}</Text>
+                              </View>
+                            )}
+          <Text style={styles.detailLabel}>Blood Group</Text>
+          <Text style={styles.detailValue}>{employee.BLOOD_GROUP || 'No data found'}</Text>
+          <Text style={styles.detailLabel}>Account No.</Text>
+          <Text style={styles.detailValue}>{employee.ACCOUNT_NO || 'No data found'}</Text>
+          <Text style={styles.detailLabel}>IFSC Code</Text>
+          <Text style={styles.detailValue}>{employee.IFSC_CODE || 'No data found'}</Text>
+          <Text style={styles.detailLabel}>Bank Name</Text>
+          <Text style={styles.detailValue}>{employee.BANK_NAME || 'No data found'}</Text>
+        </View>
+      </View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  gradient: {
-    flex: 1,  // Full height and width
-    width: '100%',
-    height: '100%',
-  },
   container: {
     flex: 1,
-    padding: 10,
+    padding: 2,
     backgroundColor: '#ffffff',
-    marginBottom: 5,
   },
-  ScrollViewcontainer: {
-    flexGrow: 1, // Ensures the ScrollView takes up the remaining space
-  },
-  headerText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  searchInput: {
-    //flex: 1, // Take up remaining space
-    height: 40,
-    borderColor: '#5c6cf5',
-    borderWidth: 1,
-    marginBottom: 16,
-    paddingHorizontal: 8,
-    borderRadius: 5,
-
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  searchIcon: {
-    width: 20,
-    height: 20,
-    marginRight: 10, // Space between icon and input
-  },
-  item: {
-    padding: 15,
-    //borderBottomWidth: 1,
-    //borderBottomColor: '#ccc',
-    borderColor: '#5c6cf5',
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  item1: {
-    padding: 20,
-    marginTop: 5,
-    fontSize: 15,
-  },
-  image: {
-    width: 130, // Adjust width as needed
-    height: 130, // Adjust height as needed
-    borderRadius: 50, // Optional: makes the image circular
-    marginBottom: 5, // Space between image and text
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  bold: {
-    fontWeight: 600,
-    color: '#006aa5',
-  },
-  loader: {
+  innerContainer: {
     flex: 1,
+    padding: 10,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    //marginBottom: 10,
+  },
+  textContainer: {
+    flex: 1,
+    marginLeft: 15,
+  },
+  name: {
+    fontSize: 17,
+    fontWeight: '500',
+    letterSpacing: 0.3, 
+  },
+  designation: {
+    fontSize: 14,
+    color: '#666',
+    letterSpacing: 0.3, 
+  },
+  imageContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 100,
+    overflow: 'hidden', // Ensures the image stays within the circle
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 100,
+  },
+  noImageText: {
+    fontSize: 12,
+    color: '#888',
+    textAlign: 'center',
+    letterSpacing: 0.3,   
+    backgroundColor: '#f4f4f4', 
+    height: 120,
+    width: 120,
+    lineHeight: 110,
+    
+  },
+  detailsContainer: {
+    marginTop: 20,
+    padding: 15,
+    backgroundColor: '#f5faff',
+    borderRadius: 12,
+       
+  },
+  detailLabel: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#085eafff',
+    letterSpacing: 0.3, 
+  },
+  detailValue: {
+    fontSize: 14,
+    marginBottom: 10,
+    color: '#333',
+    letterSpacing: 0.3, 
   },
   error: {
     color: 'red',
     textAlign: 'center',
-    marginTop: 20,
-  },
-  list: {
-    flex: 1, // Ensures FlatList takes up remaining space
-  },
-  row: {
-    flexDirection: 'row',
-    paddingVertical: 10,
-    //borderBottomWidth: 1,
-    //borderBottomColor: '#ddd',
-  },
-  cell: {
-    flex: 1,
-    textAlign: 'center',
-  },
-  searchIcon: {
-    marginRight: 10, // Space between icon and input
+    marginTop: 10,
   },
 });
 
 export default EmployeeDetails;
-
-
-
-// import React, { useState, useEffect } from 'react';
-// import { View, Text, TextInput, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
-// import axios from 'axios';
-
-// const EmployeeDetails = () => {
-//   const [searchTerm, setSearchTerm] = useState('');
-//   const [employees, setEmployees] = useState([]);
-//   const [filteredEmployees, setFilteredEmployees] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const fetchEmployees = async () => {
-//       try {
-//         const response = await axios.get('https://reactapi.iffco.coop/EmpDirectory/GetEmpDirAllData');
-//         console.log(response.data); // Log the data to check its structure
-//         setEmployees(response.data);
-//         setFilteredEmployees(response.data);
-//         setLoading(false);
-//       } catch (err) {
-//         setError('Failed to fetch data');
-//         setLoading(false);
-//       }
-//     };
-  
-//     fetchEmployees();
-//   }, []);
-
-//   useEffect(() => {
-//     // Check if employees data is available and has items
-//     if (employees.length > 0) {
-//       const filtered = employees.filter(employee =>
-//         employee.pno.toLowerCase().includes(searchTerm.toLowerCase())
-//       );
-//       setFilteredEmployees(filtered);
-//     }
-//   }, [searchTerm, employees]);
-
-//   if (loading) {
-//     return <ActivityIndicator size="large" color="#0000ff" style={styles.loader} />;
-//   }
-
-//   if (error) {
-//     return <Text style={styles.error}>{error}</Text>;
-//   }
-
-//   return (
-//     <View style={styles.container}>
-//       <TextInput
-//         style={styles.searchInput}
-//         placeholder="Search Employees"
-//         value={searchTerm}
-//         onChangeText={setSearchTerm}
-//       />
-//       <FlatList
-//         data={filteredEmployees}
-//         keyExtractor={item => item}
-//         renderItem={({ item }) => (
-//           <View style={styles.item}>
-//             <Text style={styles.itemText}>{item.name}</Text>
-//           </View>
-//         )}
-//       />
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     padding: 10,
-//     backgroundColor: '#fff',
-//   },
-//   searchInput: {
-//     height: 40,
-//     borderColor: '#ccc',
-//     borderWidth: 1,
-//     borderRadius: 5,
-//     paddingHorizontal: 10,
-//     marginBottom: 20,
-//   },
-//   item: {
-//     padding: 10,
-//     borderBottomWidth: 1,
-//     borderBottomColor: '#ccc',
-//   },
-//   itemText: {
-//     fontSize: 16,
-//   },
-//   loader: {
-//     flex: 1,
-//     justifyContent: 'center',
-//   },
-//   error: {
-//     color: 'red',
-//     textAlign: 'center',
-//     marginTop: 20,
-//   },
-// });
-
-// export default EmployeeDetails;

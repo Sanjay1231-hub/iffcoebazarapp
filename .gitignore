@@ -5,6 +5,8 @@ node_modules/
 
 # Expo
 .expo/
+.expo-shared/
+.expo-dev/
 dist/
 web-build/
 
@@ -33,3 +35,14 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+/android
+/ios
+
+# EAS Build artifacts
+*.tar.gz
+*.apk
+*.aab
+
+# VSCode
+.vscode/

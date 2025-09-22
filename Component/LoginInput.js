@@ -13,8 +13,7 @@ const LoginInput = ({
 }) => {
   return (
     <View style={[styles.inputContainer, style]}>
-      {/* <Icon name={iconName} size={25} color="#9c9c9c" style={styles.icon} /> */}
-      <Ionicons  name={iconName} size={20} color="#9c9c9c" style={styles.icon} />
+      <Ionicons  name={iconName} size={20} style={styles.icon} />
       <TextInput
         placeholder={placeholder}
         secureTextEntry={secureTextEntry}
@@ -28,25 +27,44 @@ const LoginInput = ({
   );
 };
 
-const styles = StyleSheet.create({
-  inputContainer: {    
-    flexDirection: 'row',
-    alignItems: 'center',
-    //borderBottomWidth: 1,
-    //borderBottomColor: '#fff',
-    //marginVertical: 10,
-    //paddingHorizontal: 10,
-  },
-  icon: {
-    marginRight: 10,
-    marginLeft: -10,
-  },
-  input: {
-    flex: 1,
-    height: 36,
-    fontSize: 14,
- 
-  },
-});
+const Passwordinput = ({
+  placeholder,
+  secureTextEntry,
+  iconName,
+  style,
+  value,
+  onChangeText,
+  placeholderTextColor
+}) => {
+  return (
+    <View style={[styles.inputContainer, style]}>
+      <Ionicons  name={iconName} size={20} style={styles.icon} />
+      <TextInput
+        placeholder={placeholder}
+        secureTextEntry={secureTextEntry}
+        value={value}
+        onChangeText={onChangeText}
+        placeholderTextColor={placeholderTextColor}
+        style={styles.input}        
+      />
+    </View>
+  );
+};
 
-export default LoginInput;
+const styles = StyleSheet.create({
+    inputContainer: {    
+      flexDirection: 'row',
+      alignItems: 'center',   
+    },
+    icon: {
+      marginRight: 10,
+      color: '#a3a3a3',
+    },
+    input: {
+      flex: 1,
+      height: 36,
+      fontSize: 14, 
+    },
+  });
+
+export { LoginInput, Passwordinput };
