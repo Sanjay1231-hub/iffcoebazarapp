@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "812907687125",
+    "project_id": "push-notification-ebazar-app",
+    "storage_bucket": "push-notification-ebazar-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812907687125:android:a877e0658b130bf7ad465c",
+        "android_client_info": {
+          "package_name": "com.iffcoebazar.cnfportal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvaxfSQq4OdzTVEZf1DlggBvFFiCIUC6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:812907687125:android:a154f9a4b87edfc0ad465c",
+        "android_client_info": {
+          "package_name": "com.iffcoebazar.ebazar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvaxfSQq4OdzTVEZf1DlggBvFFiCIUC6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
