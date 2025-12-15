@@ -17,9 +17,9 @@ function Home() {
   const navigation = useNavigation();
   const [loggedUser, setLoggedUser] = useState(null);   
   const [loggedEmpRole, setLoggedEmpRole] = useState(null);
-  const rolesForODApply       = ["HO", "STORE"];   // allowed roles
+  const rolesForODApply       = ["HO", "STORE", "HELPER"];   // allowed roles
   const rolesForApproval      = ["IF", "RM"];      // verified roles
-  const rolesForBazarSoft     = ["STORE"];         // only store
+  const rolesForBazarSoft     = ["STORE", "HELPER"];         // only store
 
 
   useEffect(() => {

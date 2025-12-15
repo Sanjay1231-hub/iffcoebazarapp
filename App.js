@@ -284,31 +284,57 @@ useEffect(() => {
 
 
   return (
-    <ErrorBoundary>
+    // <ErrorBoundary>
 
   
-    <SafeAreaProvider>
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss(); // Hide keyboard when tapping outside
-          resetTimer(); // Reset inactivity timer
-        }}
-      >
+    // <SafeAreaProvider>
+    //   <TouchableWithoutFeedback
+    //     onPress={() => {
+    //       Keyboard.dismiss(); // Hide keyboard when tapping outside
+    //       resetTimer(); // Reset inactivity timer
+    //     }}
+    //   >
        
-        <SafeAreaView style={{ flex: 1 }}>
+    //     <SafeAreaView style={{ flex: 1 }}>
+    //       {!isLoggedIn ? (
+    //         <LoginPage onLogin={handleLogin} />
+            
+    //       ) : (
+    //         <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={resetTimer}>
+    //           <AppNavigator onLogout={handleLogout} userType={userType} />
+               
+                
+    //         </TouchableOpacity>
+            
+    //       )}          
+         
+    //           <CkeckUpdate/>
+
+    //       <AlertWithIcon
+    //         visible={alert.visible}
+    //         title={alert.title}
+    //         message={alert.message}
+    //         type={alert.type}
+    //         onClose={() => setAlert({ ...alert, visible: false })}
+    //       />
+    //     </SafeAreaView>
+       
+    //   </TouchableWithoutFeedback>
+    // </SafeAreaProvider>
+    //   </ErrorBoundary>
+
+    <SafeAreaProvider>
+      <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss(); resetTimer(); }}>
+        <View style={{ flex: 1 }}>
           {!isLoggedIn ? (
             <LoginPage onLogin={handleLogin} />
-            
           ) : (
             <TouchableOpacity activeOpacity={1} style={{ flex: 1 }} onPress={resetTimer}>
               <AppNavigator onLogout={handleLogout} userType={userType} />
-               
-                
             </TouchableOpacity>
-            
-          )}          
-         
-              <CkeckUpdate/>
+          )}
+
+          <CkeckUpdate />
 
           <AlertWithIcon
             visible={alert.visible}
@@ -317,11 +343,10 @@ useEffect(() => {
             type={alert.type}
             onClose={() => setAlert({ ...alert, visible: false })}
           />
-        </SafeAreaView>
-       
+        </View>
       </TouchableWithoutFeedback>
     </SafeAreaProvider>
-      </ErrorBoundary>
+
   );
 };
 

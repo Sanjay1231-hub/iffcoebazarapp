@@ -7,7 +7,7 @@ const EmployeeDetails = ({ route }) => {
   const [imageUrl, setImageUrl] = useState(null); // To store image URL (base64 string)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const API_BASE_URL = process.env.REACT_APP_API_URL;
   
   useEffect(() => {
     fetchData();

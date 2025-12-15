@@ -1,14 +1,14 @@
 export default {
   expo: {    
-    //name: "IffcoEbazar",   
-    name: "Iffco Ebazar App",   
-    //slug: "ReactProjectApp",
-    slug: "ebzbazarsoftapp",
-    //scheme: "exp+iffcoebazar",
-    scheme: "exp+ebzbazarsoftapp",
+    name: "IffcoEbazar",   
+    //name: "Iffco Ebazar App",   
+    slug: "ReactProjectApp",
+    //slug: "ebzbazarsoftapp",
+    scheme: "exp+iffcoebazar",
+    //scheme: "exp+ebzbazarsoftapp",
     version: "1.0.4",
-    //owner: "ebazartesting",
-    owner: "iffcoebazaritapp",
+    owner: "ebazartesting",
+    //owner: "iffcoebazaritapp",
     icon: "./assets/icon01.png",
     entryPoint: "./App.js",
     userInterfaceStyle: "light",    
@@ -38,8 +38,8 @@ export default {
       policy: "appVersion"
     },
     updates: {
-      //url: "https://u.expo.dev/c3c8075c-04e3-47e1-b58c-19f17cf4c14d",
-      url: "https://u.expo.dev/8ac27d53-267f-451b-87b7-28c1ac75e2f1",
+      url: "https://u.expo.dev/c3c8075c-04e3-47e1-b58c-19f17cf4c14d",
+      //url: "https://u.expo.dev/8ac27d53-267f-451b-87b7-28c1ac75e2f1",
       enabled: true,
       checkAutomatically: "ON_LOAD",
       fallbackToCacheTimeout: 0,
@@ -49,8 +49,8 @@ export default {
     ios: {
       usesAppleSignIn: true,
       supportsTablet: true,
-      //bundleIdentifier: "com.iffcoebazar.ebazar",
-      bundleIdentifier: "com.iffcoebazar.bazarsoft",
+      bundleIdentifier: "com.iffcoebazar.ebazar",
+      //bundleIdentifier: "com.iffcoebazar.bazarsoft",
       buildNumber: "1.0.4",
       infoPlist: {
         NSLocationWhenInUseUsageDescription: "We need your location to show nearby places",
@@ -66,10 +66,10 @@ export default {
       compileSdkVersion: 35,
       targetSdkVersion: 35,
       minSdkVersion: 24,
-      //versionCode: 12,
-      versionCode: 1,
-      //package: "com.iffcoebazar.ebazar",
-      package: "com.iffcoebazar.bazarsoft",
+      versionCode: 12,
+      //versionCode: 1,
+      package: "com.iffcoebazar.ebazar",
+      //package: "com.iffcoebazar.bazarsoft",
 
       // **NOTE:** You don't need to repeat jsEngine/hermes here since it's set at the top level, 
       // but keeping it for redundancy doesn't hurt.
@@ -124,10 +124,11 @@ export default {
 
     // --- Extra Configuration ---
     extra: {
-      apiUrl: process.env.API_URL || 'https://mappws.iffco.coop/ebazarapi',
+      //apiUrl: process.env.API_URL || 'https://mappws.iffco.coop/ebazarapi',
+      apiUrl: process.env.API_URL || 'https://ebazarapi.iffco.in/API',
       eas: {
-        //projectId: "c3c8075c-04e3-47e1-b58c-19f17cf4c14d"
-        projectId: "8ac27d53-267f-451b-87b7-28c1ac75e2f1"
+        projectId: "c3c8075c-04e3-47e1-b58c-19f17cf4c14d"
+        //projectId: "8ac27d53-267f-451b-87b7-28c1ac75e2f1"
       },
     },
 
