@@ -237,6 +237,7 @@ export default function NEFTDeposit() {
                                         value={item.customername}
                                         placeholderTextColor="#a3a3a3"
                                         editable={false} 
+                                        allowFontScaling={false}
                                     />
                                     <Modal
                                         animationType="slide"
@@ -312,6 +313,7 @@ export default function NEFTDeposit() {
                                         value={item.customerid}
                                         placeholderTextColor="#a3a3a3"
                                         editable={false} 
+                                        allowFontScaling={false}
                                     />
                                 </View>
 
@@ -322,6 +324,7 @@ export default function NEFTDeposit() {
                                         value={item.customerrefname}
                                         placeholderTextColor="#a3a3a3"
                                         editable={false} 
+                                        allowFontScaling={false}
                                     />
                                 </View>
                                 <View style={styles.tabInputContainer}>  
@@ -382,6 +385,7 @@ export default function NEFTDeposit() {
                                                 updatedRows[index].neftnumber = text;
                                                 setRows(updatedRows);
                                             }}
+                                            allowFontScaling={false}
                                     />
                                 </View> 
                                 <View style={styles.tabInputContainer}>
@@ -456,6 +460,7 @@ export default function NEFTDeposit() {
                                             updatedRows[index].amount = cleanedText;
                                             setRows(updatedRows);
                                         }}
+                                        allowFontScaling={false}
                                     />
 
                                 </View>
@@ -474,6 +479,7 @@ export default function NEFTDeposit() {
                                         value={item.value}
                                         placeholderTextColor="#a3a3a3"
                                         editable={false}
+                                        allowFontScaling={false}
                                     />
                                 
                                     <Modal 
@@ -522,11 +528,13 @@ export default function NEFTDeposit() {
                                                     placeholder="enter your remark"
                                                     value={item.reason}
                                                     placeholderTextColor='#a3a3a3'
+                                                    allowFontScaling={false}
                                                     onChangeText={(text) => {
                                                         const updatedRows = [...rows];
                                                         updatedRows[index].remark = text;
                                                         setRows(updatedRows);
                                                     }}
+                                                    
                                                 />
                                 </View>    
                                 <View style={styles.tabInputContainer}>

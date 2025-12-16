@@ -323,17 +323,17 @@ const styles = StyleSheet.create({
       letterSpacing: 0.3,
     },
     input: {
-        height: 40,
-        flex: 1,
-        fontSize: 15,
-        color: '#333',
-        backgroundColor: 'rgb(255, 255, 255)',
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 4,
-        paddingLeft: 8,
-        marginBottom: 2,
-        justifyContent: 'center',
+      fontSize: 16,
+      lineHeight: 20,            // Ensures text fits vertically
+      minHeight: 40,             // Use minHeight instead of fixed height
+      color: '#333',
+      backgroundColor: '#fff',
+      borderColor: '#ccc',
+      borderWidth: 1,
+      borderRadius: 4,
+      paddingHorizontal: 8,      // Left/right padding
+      marginBottom: 2,
+      textAlignVertical: 'center', // Vertical centering on Android
     }, 
   });
 

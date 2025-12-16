@@ -461,7 +461,8 @@ const PartyBalanceConfirmationOtp = () => {
                         placeholder="Enter Amount"
                         placeholderTextColor='#a3a3a3'
                         onChangeText={handleVerifiedAmountChange}
-                        keyboardType="numeric"                       
+                        keyboardType="numeric"      
+                        allowFontScaling={false}                 
                     />
                     <View style={{ width: '25%'}}>
                     <PartyBalanceDebitCredit selectedValue={debitCredit} onValueChange={setDebitCredit}/>
@@ -493,6 +494,7 @@ const PartyBalanceConfirmationOtp = () => {
                                   value={otp}
                                   onChangeText={(text) => setOtp(text)} // Updating OTP state
                                   placeholderTextColor="#a3a3a3"
+                                  allowFontScaling={false}
                                 />
                 </View>            
 

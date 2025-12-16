@@ -552,6 +552,7 @@ export default function IndentScreen() {
                 value={selectedProduct}
                 placeholderTextColor="#a3a3a3"
                 editable={false}
+                allowFontScaling={false}
             />
         </View>
 
@@ -584,6 +585,7 @@ export default function IndentScreen() {
                             value={searchQuery}
                             onChangeText={handleSearch}
                             placeholderTextColor="#a3a3a3"
+                            allowFontScaling={false}
                         />
                         <Ionicons
                             name="search"
@@ -695,6 +697,7 @@ export default function IndentScreen() {
                 keyboardType="decimal-pad"
                 value={selectedRate}
                 editable={false}
+                allowFontScaling={false}
               
             />
 
@@ -713,6 +716,7 @@ export default function IndentScreen() {
                     const intValue = text.replace(/[^0-9]/g, '');
                     setQty(intValue);
                 }}
+                allowFontScaling={false}
             />
         </View>
             
@@ -828,258 +832,274 @@ export default function IndentScreen() {
 
 const styles = StyleSheet.create({
   container: { 
-        flex: 1, 
-        padding: 5, 
-        backgroundColor: "#fff" 
-    },   
-    label: {
-        fontSize: 16,
-        color: '#424242',
-        fontWeight: '400',
-        letterSpacing: 0.3,       
-        paddingVertical: 2, 
-        textAlignVertical: 'center',
-    },
+    flex: 1, 
+    padding: 5, 
+    backgroundColor: '#fff',
+  },
 
-    asterisk: {
-        color: 'red',
-        fontSize: 16,
-        letterSpacing: 0.3, 
-    },
-    modalTitle: {
-        fontSize: 14,
-        color: '#333',
-        backgroundColor: '#e4e4e4',
-        paddingVertical: 3,
-        paddingHorizontal: 3,
-        fontWeight: 500,
-        width: '93%',
-        letterSpacing: 0.3,
-    },
-    flatListList: {
-        flexGrow: 1,
-        maxHeight: 300, // Set a maximum height if needed
-        //width: '100%',
-        backgroundColor: '#fff',
-        //width: 400,
-    },   
-    searchInput: {
-        height: 35,
-        fontSize: 15,
-        letterSpacing: 0.3,
-        color: '#333',
-        flex: 1,
-    },
-    prdRow: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        width: '100%',
-        borderWidth: 1,
-        borderRadius: 3,
-        borderColor: '#ccc',
-        paddingHorizontal: 5,
-    },
-    lovclose: {
-        backgroundColor: '#e4e4e4',
-        textAlign: 'center',
-    },
-    dateButton: {
-        height: 37,
-        flex: 1,
-        justifyContent: 'space-around',
-        //paddingVertical: 5,
-        borderRadius: 4,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        letterSpacing: 0.3,
-        backgroundColor: "#f0f0f0",
-        paddingHorizontal: 6,
-        textAlignVertical: 'center', 
-        //verticalAlign: 'middle',
-    },
- 
-    dateText: {
-        fontSize: 15,
-        textAlign: 'left',
-        letterSpacing: 0.3, 
-    },
+  label: {
+    fontSize: 16,
+    color: '#424242',
+    fontWeight: '400',
+    letterSpacing: 0.3,
+    paddingVertical: 2,
+    textAlignVertical: 'center',
+    includeFontPadding: false,
+  },
 
-    tabInputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        marginBottom: 4,
-    },
-    buttonLov: {
-        height: 40,
-        width: 35,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#208cf3',
-        borderRadius: 4,
-        paddingHorizontal: 5,
-        zIndex: 1,
-    },
-    input: {
-        height: 40,
-        flex: 1,
-        fontSize: 15,
-        color: '#333',
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 4,
-        paddingLeft: 8,
-        textAlignVertical: 'center',
-    },  
-    addBtn: {
-        backgroundColor: "#f8d81fff",
-        marginBottom: 20,
-        borderRadius: 5,
-        height: 35,
-        alignItems: 'center',
-        justifyContent: 'center',
-        // Shadow for iOS
-        shadowColor: '#000', // Color of the shadow
-        //shadowColor: '#0368ff', // Color of the shadow
-        shadowOffset: { width: 0, height: 4 }, // Shadow offset (x, y)
-        shadowOpacity: 0.1, // Transparency of the shadow
-        shadowRadius: 5, // Blur effect of the shadow
-          // Shadow for Android
-         elevation: 3,
-    },
-    addBtnText: { 
-        fontSize: 16,
-        color: "#333", 
-        textAlign: "center", 
-        fontWeight: "500",
-        letterSpacing: 0.3,
-    },
-  
+  asterisk: {
+    color: 'red',
+    fontSize: 16,
+    letterSpacing: 0.3,
+  },
 
-    row: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        borderBottomWidth: 1,
-        borderColor: '#dfdfdfff',
-    },   
-  
-    tableRow: {
-        flexDirection: 'row',
-        backgroundColor: '#f9f9f9',    
-        //paddingHorizontal: 6,
-        borderBottomWidth: 1,
-        borderBottomColor: '#dfdfdfff', 
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5, 
-        //width: 400,
-    },
-    tableTotalRow: {
-        flexDirection: 'row',
-        backgroundColor: '#fcfaafff',    
-        //paddingHorizontal: 6,
-        borderBottomWidth: 2,
-        borderBottomColor: '#c2c2c2ff', 
-        borderTopLeftRadius: 5,
-        borderTopRightRadius: 5, 
-        //width: 400,
-    },
-    tableContainer: {
-        flex: 1,  
-        padding: 5,  
-    },
-    header: {
-        flexDirection: 'row',
-        width: '100%',
-        backgroundColor: '#6c80ad',
-    },
-    listheader: {
-        flexDirection: 'row',
-        backgroundColor: '#6c80ad',
-        //width: 400,
-    },   
-    headerText: {
-        flex: 1,
-        textAlign: 'center',
-        fontSize: 14,
-        paddingVertical: 4,
-        paddingHorizontal: 4,
-        color: '#fff',
-        borderRightWidth: 1,
-        borderColor: '#FFFFFF',
-        letterSpacing: 0.3,
-    },
-     cell: {
-        flex: 1,
-        paddingVertical: 5,
-        paddingHorizontal: 5,
-        borderRightWidth: 1,
-        borderColor: '#dfdfdfff',
-        width: '100%',        
-    },   
-    flatList: {
-        flexGrow: 1, // This makes the FlatList take the available space
-        maxHeight: 400, // Set a maximum height if needed
-        width: '100%',
-        backgroundColor: '#fff',
-    },
-    deleteBtn: {  
-        flex: 1,
-        textAlign: 'center',
-        paddingVertical: 5,
-        paddingHorizontal: 5,
-        borderRightWidth: 1,
-        borderColor: '#ccc',
-        width: '100%', 
-    }, 
-    modalContainer: {
-        flex: 1,       
-        justifyContent: 'center',      
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    },
-    modalContent: {
-        backgroundColor: '#fff',
-        padding: 2,
-        //borderRadius: 0,
-        width: '90%',
-        alignItems: 'center',
-    }, 
-    submitButton: {
-        //backgroundColor: '#0063B2',
-        backgroundColor: '#208cf3',
-        marginTop: 10,
-        borderRadius: 5,
-        height: 35,
-        alignItems: 'center',
-        justifyContent: 'center',
-        // Shadow for iOS
-        shadowColor: '#000', // Color of the shadow
-        //shadowColor: '#0368ff', // Color of the shadow
-        shadowOffset: { width: 0, height: 4 }, // Shadow offset (x, y)
-        shadowOpacity: 0.1, // Transparency of the shadow
-        shadowRadius: 5, // Blur effect of the shadow
-        
-        // Shadow for Android
-        elevation: 3, // Elevation for Android shadow
-    },
-    submitText: {
-        color: '#fff',
-        fontSize: 17,
-        fontWeight: '400',
-        letterSpacing: 0.3, 
-    },
-    footer: {
-        paddingVertical: 5,
-        width: '100%',
-        paddingHorizontal: 5,
-        alignItems: 'right',
-        borderTopWidth: 1,
-        borderColor: '#ccc',
-        backgroundColor: '#ccc',
-    },
-    footerText: {
-        fontSize: 14,
-        //fontWeight: '500',
-        color: '#333',
-    },
+  modalTitle: {
+    fontSize: 14,
+    color: '#333',
+    backgroundColor: '#e4e4e4',
+    paddingVertical: 3,
+    paddingHorizontal: 3,
+    fontWeight: '500',
+    width: '93%',
+    letterSpacing: 0.3,
+    includeFontPadding: false,
+  },
+
+  flatListList: {
+    flexGrow: 1,
+    maxHeight: 300,
+    backgroundColor: '#fff',
+  },
+
+  searchInput: {
+    minHeight: 35,
+    flex: 1,
+    fontSize: 15,
+    letterSpacing: 0.3,
+    color: '#333',
+    includeFontPadding: false,
+  },
+
+  prdRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: '#ccc',
+    paddingHorizontal: 5,
+  },
+
+  lovclose: {
+    backgroundColor: '#e4e4e4',
+    textAlign: 'center',
+  },
+
+  dateButton: {
+    minHeight: 40,
+    flex: 1,
+    justifyContent: 'space-around',
+    borderRadius: 4,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    letterSpacing: 0.3,
+    backgroundColor: '#f0f0f0',
+    paddingHorizontal: 6,
+    textAlignVertical: 'center',
+    includeFontPadding: false,
+  },
+
+  dateText: {
+    fontSize: 15,
+    textAlign: 'left',
+    letterSpacing: 0.3,
+    includeFontPadding: false,
+  },
+
+  tabInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    marginBottom: 4,
+  },
+
+  buttonLov: {
+    minHeight: 40,
+    width: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#208cf3',
+    borderRadius: 4,
+    paddingHorizontal: 5,
+    zIndex: 1,
+  },
+
+  input: {
+    minHeight: 40,
+    flex: 1,
+    fontSize: 15,
+    color: '#333',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingLeft: 8,
+    textAlignVertical: 'center',
+    includeFontPadding: false,
+  },
+
+  addBtn: {
+    backgroundColor: '#f8d81fff',
+    marginBottom: 20,
+    borderRadius: 5,
+    height: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+
+  addBtnText: { 
+    fontSize: 16,
+    color: '#333', 
+    textAlign: 'center', 
+    fontWeight: '500',
+    letterSpacing: 0.3,
+    includeFontPadding: false,
+  },
+
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    borderBottomWidth: 1,
+    borderColor: '#dfdfdf',
+  },
+
+  tableRow: {
+    flexDirection: 'row',
+    backgroundColor: '#f9f9f9',
+    borderBottomWidth: 1,
+    borderBottomColor: '#dfdfdf',
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+
+  tableTotalRow: {
+    flexDirection: 'row',
+    backgroundColor: '#fcfaaf',
+    borderBottomWidth: 2,
+    borderBottomColor: '#c2c2c2',
+    borderTopLeftRadius: 5,
+    borderTopRightRadius: 5,
+  },
+
+  tableContainer: {
+    flex: 1,
+    padding: 5,
+  },
+
+  header: {
+    flexDirection: 'row',
+    width: '100%',
+    backgroundColor: '#6c80ad',
+  },
+
+  listheader: {
+    flexDirection: 'row',
+    backgroundColor: '#6c80ad',
+  },
+
+  headerText: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 14,
+    paddingVertical: 4,
+    paddingHorizontal: 4,
+    color: '#fff',
+    borderRightWidth: 1,
+    borderColor: '#fff',
+    letterSpacing: 0.3,
+    includeFontPadding: false,
+  },
+
+  cell: {
+    flex: 1,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRightWidth: 1,
+    borderColor: '#dfdfdf',
+    width: '100%',
+  },
+
+  flatList: {
+    flexGrow: 1,
+    maxHeight: 400,
+    width: '100%',
+    backgroundColor: '#fff',
+  },
+
+  deleteBtn: {  
+    flex: 1,
+    textAlign: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRightWidth: 1,
+    borderColor: '#ccc',
+    width: '100%',
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
+  modalContent: {
+    backgroundColor: '#fff',
+    padding: 2,
+    width: '90%',
+    alignItems: 'center',
+  },
+
+  submitButton: {
+    backgroundColor: '#208cf3',
+    marginTop: 10,
+    marginBottom: 20,
+    borderRadius: 5,
+    minHeight: 35,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+  },
+
+  submitText: {
+    color: '#fff',
+    fontSize: 17,
+    fontWeight: '400',
+    letterSpacing: 0.3,
+    includeFontPadding: false,
+  },
+
+  footer: {
+    paddingVertical: 5,
+    width: '100%',
+    paddingHorizontal: 5,
+    alignItems: 'flex-end',
+    borderTopWidth: 1,
+    borderColor: '#ccc',
+    backgroundColor: '#ccc',
+  },
+
+  footerText: {
+    fontSize: 14,
+    color: '#333',
+    includeFontPadding: false,
+  },
 });

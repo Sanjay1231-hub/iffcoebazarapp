@@ -130,6 +130,7 @@ export default function CashCollection() {
             fontSize: 18,
             paddingVertical: 8,
           }}
+          allowFontScaling={false}
         />
         <TextInput
           placeholder="Enter amount"
@@ -146,6 +147,7 @@ export default function CashCollection() {
             fontSize: 18,
             paddingVertical: 8,
           }}
+          allowFontScaling={false}
         />
         <Button
           title="Generate QR Code"

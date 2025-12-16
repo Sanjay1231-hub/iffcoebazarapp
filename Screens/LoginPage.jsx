@@ -24,9 +24,10 @@ const LoginPage = ({ onLogin }) => {
   const [frBALoginPassword, setFrBALoginPassword] = useState(''); // State to check if OTP was sent
   const [resendLoading, setResendLoading] = useState(false);
   const [resendTimer, setResendTimer] = useState(0);
-const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [alert, setAlert] = useState({ visible: false, title: "", message: "", type: "" });
- const [checkingSession, setCheckingSession] = useState(true); // 🔹 session check state
+  const [checkingSession, setCheckingSession] = useState(true); // 🔹 session check state
+   //const [imageUrl, setImageUrl] = useState(null); // To store image URL (base64 string)
 
   useEffect(() => {
     const checkSession = async () => {
@@ -144,9 +145,11 @@ const [showPassword, setShowPassword] = useState(false);
         await AsyncStorage.setItem('empBankName', String(userData.BANK_NAME ?? ''));
         await AsyncStorage.setItem('empBankIFSC', String(userData.IFSC_CODE ?? ''));
         await AsyncStorage.setItem('empBloodGroup', String(userData.BLOOD_GROUP ?? ''));
-        await AsyncStorage.setItem('empPhoto', String(userData.EMP_PHOTO ?? ''));
+        //await AsyncStorage.setItem('empPhoto', String(userData.EMP_PHOTO ?? ''));
         await AsyncStorage.setItem('userType', selectedValue);
         onLogin();
+
+        fetchUserImage(); // fetching user image
       } else {
         setAlert({ visible: true, title: "Invalid Credentials", message: "The username or password you entered is incorrect.", type: "warning" });
       }
@@ -156,29 +159,30 @@ const [showPassword, setShowPassword] = useState(false);
     } finally {
       setLoading(false);
     }
+    
   };
 
-//  const EmployeeTypeChange = (value) => {
-//     setSelectedValue(value);
-//     //setUsername('');
-//     //setPassword('');
-//     setMobileNumber('');
-//     setOtp('');
-//     setOtpSent(false);
-//     setResendTimer(0);
-//   };
+  //  const EmployeeTypeChange = (value) => {
+  //     setSelectedValue(value);
+  //     //setUsername('');
+  //     //setPassword('');
+  //     setMobileNumber('');
+  //     setOtp('');
+  //     setOtpSent(false);
+  //     setResendTimer(0);
+  //   };
 
-const EmployeeTypeChange = (value) => {
-  setSelectedValue(value);
-  // reset relevant states
-  setOtpSent(false);
-  setFrBAPassword(false);
-  setOtp('');
-  setMobileNumber('');
-  setFrBALoginPassword('');
-  setUsername('');
-  setPassword('');
-};
+  const EmployeeTypeChange = (value) => {
+    setSelectedValue(value);
+    // reset relevant states
+    setOtpSent(false);
+    setFrBAPassword(false);
+    setOtp('');
+    setMobileNumber('');
+    setFrBALoginPassword('');
+    setUsername('');
+    setPassword('');
+  };
 
 
   // OTP send function
@@ -274,6 +278,7 @@ const EmployeeTypeChange = (value) => {
     await handleSendOtp();
     setResendLoading(false);
   };
+
  const handleSubmitOtp = async () => {
     if (!otp || otp.length < 4) {
       setAlert({ visible: true, title: "Invalid OTP", message: "Please enter a valid 4-digit OTP.", type: "warning" });
@@ -357,95 +362,95 @@ const EmployeeTypeChange = (value) => {
   };
 
   const handleLoginWithPassword = async () => {
-  if (!frBALoginPassword) {
-    setAlert({
-      visible: true,
-      title: "Invalid Password",
-      message: "Please enter your password.",
-      type: "warning"
-    });
-    return;
-  }
-
-  setPwdLoading(true); // reuse loading state
-
-  try {
-    const postData = {
-      token: API_TOKEN,
-      apiId: "51", // assuming API ID 36 is for password login, replace if needed
-      inApiParameters: [
-        { label: "P_MOBILE_NO", value: mobileNumber },
-        { label: "P_PASS", value: frBALoginPassword }
-      ]
-    };
-
-    const response = await fetch('https://ebazarapi.iffco.in/API', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'User-Agent': 'ReactNativeApp/1.0',
-        'Accept': 'application/json',
-      },
-      body: JSON.stringify(postData),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to login. Please try again.');
-    }
-
-    const responseText = await response.text();
-    let loginData;
-    try {
-      loginData = JSON.parse(responseText);
-    } catch (parseError) {
-      setAlert({ visible: true, title: "Error", message: "Failed to parse server response.", type: "error" });
+    if (!frBALoginPassword) {
+      setAlert({
+        visible: true,
+        title: "Invalid Password",
+        message: "Please enter your password.",
+        type: "warning"
+      });
       return;
     }
 
-    const frenchiseData = loginData.output;
-    if (Array.isArray(frenchiseData) && frenchiseData.length > 0) {
-      const user = frenchiseData[0];
+    setPwdLoading(true); // reuse loading state
 
-      if (user.STATUS == 0) {
-        // Save user info
-        await AsyncStorage.setItem('username', mobileNumber || "");
-        await AsyncStorage.setItem('empname', user.FSC_NAME || "");
-        await AsyncStorage.setItem('fscName', user.FSC_NAME || "");
-        await AsyncStorage.setItem('fscDistName', user.DISTT_NAME || "");
-        await AsyncStorage.setItem('fscEmail', user.FSC_EMAIL_ID || "");
-        await AsyncStorage.setItem('foEmail', user.FO_EMAIL_ID || "");
-        await AsyncStorage.setItem('officeCode', user.FSC_CD || "");
-        await AsyncStorage.setItem('stateCd', user.STATE_CD || "");
-        await AsyncStorage.setItem('mobilleNo', mobileNumber || "");
-        await AsyncStorage.setItem('officeType', user.OFFICE_TYPE || "");
-        await AsyncStorage.setItem('userType', selectedValue);
+    try {
+      const postData = {
+        token: API_TOKEN,
+        apiId: "51", // assuming API ID 36 is for password login, replace if needed
+        inApiParameters: [
+          { label: "P_MOBILE_NO", value: mobileNumber },
+          { label: "P_PASS", value: frBALoginPassword }
+        ]
+      };
 
-        onLogin('FRANCHISE');
-        setFrBALoginPassword('');
+      const response = await fetch('https://ebazarapi.iffco.in/API', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'User-Agent': 'ReactNativeApp/1.0',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to login. Please try again.');
+      }
+
+      const responseText = await response.text();
+      let loginData;
+      try {
+        loginData = JSON.parse(responseText);
+      } catch (parseError) {
+        setAlert({ visible: true, title: "Error", message: "Failed to parse server response.", type: "error" });
+        return;
+      }
+
+      const frenchiseData = loginData.output;
+      if (Array.isArray(frenchiseData) && frenchiseData.length > 0) {
+        const user = frenchiseData[0];
+
+        if (user.STATUS == 0) {
+          // Save user info
+          await AsyncStorage.setItem('username', mobileNumber || "");
+          await AsyncStorage.setItem('empname', user.FSC_NAME || "");
+          await AsyncStorage.setItem('fscName', user.FSC_NAME || "");
+          await AsyncStorage.setItem('fscDistName', user.DISTT_NAME || "");
+          await AsyncStorage.setItem('fscEmail', user.FSC_EMAIL_ID || "");
+          await AsyncStorage.setItem('foEmail', user.FO_EMAIL_ID || "");
+          await AsyncStorage.setItem('officeCode', user.FSC_CD || "");
+          await AsyncStorage.setItem('stateCd', user.STATE_CD || "");
+          await AsyncStorage.setItem('mobilleNo', mobileNumber || "");
+          await AsyncStorage.setItem('officeType', user.OFFICE_TYPE || "");
+          await AsyncStorage.setItem('userType', selectedValue);
+
+          onLogin('FRANCHISE');
+          setFrBALoginPassword('');
+        } else {
+          setAlert({
+            visible: true,
+            title: "Invalid Password",
+            message: "The password you entered is incorrect.",
+            type: "warning"
+          });
+        }
       } else {
         setAlert({
           visible: true,
-          title: "Invalid Password",
-          message: "The password you entered is incorrect.",
-          type: "warning"
+          title: "Login Failed",
+          message: "No user data received.",
+          type: "error"
         });
       }
-    } else {
-      setAlert({
-        visible: true,
-        title: "Login Failed",
-        message: "No user data received.",
-        type: "error"
-      });
-    }
 
-  } catch (error) {
-    setAlert({ visible: true, title: "Error", message: error.message || 'Something went wrong. Please try again later.', type: "error" });
-  } finally {
-    setPwdLoading(false);
-  }
-};
-  
+    } catch (error) {
+      setAlert({ visible: true, title: "Error", message: error.message || 'Something went wrong. Please try again later.', type: "error" });
+    } finally {
+      setPwdLoading(false);
+    }
+  };
+    
 
 
   if (checkingSession) {
@@ -457,6 +462,74 @@ const EmployeeTypeChange = (value) => {
     );
   }
   
+  // const fetchUserImage = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     const [PersonalNo] = await Promise.all([
+  //       AsyncStorage.getItem('empPno')
+  //     ]);
+  //     //console.log("loged user is", PersonalNo)
+
+  //     if (!PersonalNo ) {
+  //       throw new Error('Missing required user information');
+  //     }
+
+  //     const postData = {
+  //       token: 'IEBL0001',
+  //       apiId: '4',
+  //       inApiParameters: [
+  //         {
+  //           label: 'P_PERSONAL_NO',
+  //           value: String(PersonalNo),
+  //         },
+  //       ],
+  //     };
+
+  //     const response = await fetch('https://ebazarapi.iffco.in/API', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json',
+  //         'User-Agent': 'ReactNativeApp/1.0',
+  //       },
+  //       body: JSON.stringify(postData),
+  //     });
+
+  //     const rawText = await response.text();
+
+  //     if (!response.ok) {
+  //       throw new Error(`API Error (${response.status})`);
+  //     }
+
+  //     let json;
+  //     try {
+  //       json = JSON.parse(rawText);
+  //     } catch {
+  //       throw new Error('Invalid JSON received from server');
+  //     }
+
+  //     const userData = json?.output?.[0];
+
+  //     if (userData?.EMP_PHOTO) {
+  //       //await AsyncStorage.setItem('empPhoto', String(userData.EMP_PHOTO));
+  //       setImageUrl(userData.EMP_PHOTO);
+  //     } else {
+  //       //await AsyncStorage.removeItem('empPhoto'); // ✅ correct
+  //        setImageUrl(null);
+  //     }
+
+  //     return userData?.EMP_PHOTO || null;
+  //   } catch (err) {
+  //     console.error('fetchUserImage error:', err);
+  //     Alert.alert('Image Load Failed', err.message);
+  //     return null;
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+
 
 
   return (
@@ -530,6 +603,7 @@ const EmployeeTypeChange = (value) => {
                   value={mobileNumber}
                   onChangeText={(text) => setMobileNumber(text)} // Updating mobile number state
                   placeholderTextColor="#a3a3a3"
+                   allowFontScaling={false}
                 />
               </View>
             
@@ -592,6 +666,7 @@ const EmployeeTypeChange = (value) => {
                 value={otp}
                 onChangeText={(text) => setOtp(text)} // Updating OTP state
                 placeholderTextColor="#a3a3a3"
+                 allowFontScaling={false}
               />
 
               {/* Verify OTP Button */}
@@ -639,6 +714,7 @@ const EmployeeTypeChange = (value) => {
                     secureTextEntry={!showPassword}
                     value={frBALoginPassword}
                     onChangeText={(text) => setFrBALoginPassword(text)}
+                     allowFontScaling={false}
                   />
 
                   <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>

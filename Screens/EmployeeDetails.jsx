@@ -6,97 +6,140 @@ const EmployeeDetails = ({ route }) => {
   const { employee } = route.params; // Get employee data passed from EmployeeDetails
   const [imageUrl, setImageUrl] = useState(null); // To store image URL (base64 string)
   const [loading, setLoading] = useState(true);
+  const [imageLoading, setImageLoading] = useState(true);
   const [error, setError] = useState(null);
-  const API_BASE_URL = process.env.REACT_APP_API_URL;
+  const [imageError, setImageError] = useState(null);
+  const API_BASE_URL = process.env.API_URL || 'https://ebazarapi.iffco.in/API';
   
-  useEffect(() => {
-    fetchData();
-  }, []); // Fetch data when component mounts
+  // useEffect(() => {
+  //   fetchData();
+  // }, []); // Fetch data when component mounts
 
-  const fetchData = async () => {
-    try {
-      const loggedInEmpStore = await AsyncStorage.getItem('officeCode');
-      const loggedUser = await AsyncStorage.getItem('username');
-      if (!loggedInEmpStore || !loggedUser) {
-        Alert.alert('Error', 'No store or user found');
-        return;
-      }
+  // const fetchData = async () => {
+  //   try {
+  //     const loggedInEmpStore = await AsyncStorage.getItem('officeCode');
+  //     const loggedUser = await AsyncStorage.getItem('username');
+  //     if (!loggedInEmpStore || !loggedUser) {
+  //       Alert.alert('Error', 'No store or user found');
+  //       return;
+  //     }
 
-      const postData = {
-        token: "IEBL0001",
-        apiId: "4",
-        inApiParameters: [
-          { label: "P_PERSONAL_NO", value: `${employee.PERSONAL_NO}` }          
-        ],
-      };     
+  //     const postData = {
+  //       token: "IEBL0001",
+  //       apiId: "4",
+  //       inApiParameters: [
+  //         { label: "P_PERSONAL_NO", value: `${employee.PERSONAL_NO}` }          
+  //       ],
+  //     };     
 
-      const response = await fetch('https://ebazarapi.iffco.in/API', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'User-Agent': 'ReactNativeApp/1.0',
-          'Accept': 'application/json',
-        },
-        body: JSON.stringify(postData),
-      });
+  //     //const response = await fetch('https://ebazarapi.iffco.in/API', {
+  //     const response = await fetch(API_BASE_URL, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'User-Agent': 'ReactNativeApp/1.0',
+  //         'Accept': 'application/json',
+  //       },
+  //       body: JSON.stringify(postData),
+  //     });
 
-      const text = await response.text();
+  //     const text = await response.text();
     
-      if (!response.ok) {
-        //console.warn('Non-200 response:', response.status);
-        //console.warn('Raw response body:', text);
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       //console.warn('Non-200 response:', response.status);
+  //       //console.warn('Raw response body:', text);
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
 
-      let result;
-      try {
-        result = JSON.parse(text);
-      } catch (jsonError) {
-        //console.error('Failed to parse JSON. Server returned:', text);
-        throw new Error('Invalid JSON response received.');
-      }
+  //     let result;
+  //     try {
+  //       result = JSON.parse(text);
+  //     } catch (jsonError) {
+  //       //console.error('Failed to parse JSON. Server returned:', text);
+  //       throw new Error('Invalid JSON response received.');
+  //     }
 
-      if (!result || typeof result !== 'object') {
-        throw new Error('Unexpected data format received.');
-      }
-      const userData = result.output[0];
+  //     if (!result || typeof result !== 'object') {
+  //       throw new Error('Unexpected data format received.');
+  //     }
+  //     const userData = result.output[0];
 
-      if (userData && userData.EMP_PHOTO) {
-        setImageUrl(userData.EMP_PHOTO); // Set the base64 image string from API
-      } else {
-        setImageUrl(null); // No image found, set as null
-      }
-    } catch (error) {
-      setError('Failed to load image');
-      Alert.alert('Fetch Error', error.message); // Show error alert
-    } finally {
-      setLoading(false);
-    }
-  };
-  // Loading state
-  if (loading) {
-    return (    
-       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <View style={{ transform: [{ scale: 0.6 }] }}>
-          <ActivityIndicator size={50} color="#4a80f5" />
-        </View>
-          <Text>Loading...</Text>
-        </View>
-    );
+  //     if (userData && userData.EMP_PHOTO) {
+  //       setImageUrl(userData.EMP_PHOTO); // Set the base64 image string from API
+  //     } else {
+  //       setImageUrl(null); // No image found, set as null
+  //     }
+  //   } catch (error) {
+  //     setError('Failed to load image');
+  //     Alert.alert('Fetch Error', error.message); // Show error alert
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  useEffect(() => {
+  fetchEmployeeImage();
+}, []);
+
+const fetchEmployeeImage = async () => {
+  try {
+    const postData = {
+      token: 'IEBL0001',
+      apiId: '4',
+      inApiParameters: [
+        { label: "P_PERSONAL_NO", value: `${employee.PERSONAL_NO}` } 
+      ],
+    };
+
+    const response = await fetch(API_BASE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'User-Agent': 'ReactNativeApp/1.0',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(postData),
+    });
+
+    const text = await response.text();    
+    if (!response.ok) throw new Error('Image fetch failed');
+
+    const result = JSON.parse(text);
+    const photo = result.output[0];
+
+    if (photo) setImageUrl(photo.EMP_PHOTO);
+    else setImageError(true);
+  } catch (err) {
+    setImageError(true);
+  } finally {
+    setImageLoading(false);
   }
-  if (error) {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.error}>{error}</Text>
-      </View>
-    );
-  } 
+};
+
+  // // Loading state
+  // if (loading) {
+  //   return (    
+  //      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+  //         <View style={{ transform: [{ scale: 0.6 }] }}>
+  //         <ActivityIndicator size={50} color="#4a80f5" />
+  //       </View>
+  //         <Text>Loading...</Text>
+  //       </View>
+  //   );
+  // }
+  // if (error) {
+  //   return (
+  //     <View style={styles.container}>
+  //       <Text style={styles.error}>{error}</Text>
+  //     </View>
+  //   );
+  // } 
 
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         <View style={styles.headerContainer}> 
-           <View style={styles.imageContainer}>
+           {/* <View style={styles.imageContainer}>
             {imageUrl ? (
               <Image
                 source={{ uri: `data:image/jpeg;base64,${imageUrl}` }} // Assuming it's a JPEG image
@@ -105,9 +148,29 @@ const EmployeeDetails = ({ route }) => {
             ) : (
               <Text style={styles.noImageText}>No Image Available</Text>
             )}
-          </View> 
+          </View>  */}
+          <View style={styles.imageContainer}>
+            {imageLoading && (
+              <ActivityIndicator size="small" color="#4a80f5" />
+            )}
+
+            {!imageLoading && imageUrl && (
+              <Image
+                source={{ uri: `data:image/jpeg;base64,${imageUrl}` }}
+                style={styles.profileImage}
+              />
+            )}
+
+            {!imageLoading && imageError && (
+              // <Image
+              //   source={require('../assets/logo.png')} // fallback
+              //   style={styles.profileImage}
+              // />
+              <Text style={styles.noImageText}>No Image Available</Text>
+            )}
+          </View>
           <View style={styles.textContainer}>
-            <Text style={styles.name}>{employee.EMP_NAME}</Text>
+            <Text style={styles.nametext}>{employee.EMP_NAME}</Text>
             <Text style={styles.designation}>{employee.DESIGNATION}</Text>
           </View>
         </View>
@@ -162,7 +225,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 15,
   },
-  name: {
+  nametext: {
     fontSize: 17,
     fontWeight: '500',
     letterSpacing: 0.3, 
@@ -173,16 +236,16 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3, 
   },
   imageContainer: {
-    width: 120,
-    height: 120,
+    minHeight: 120,
+    minWidth: 120,
     borderRadius: 100,
     overflow: 'hidden', // Ensures the image stays within the circle
     justifyContent: 'center',
     alignItems: 'center',
   },
   profileImage: {
-    width: 120,
-    height: 120,
+    minHeight: 120,
+    minWidth: 120,
     borderRadius: 100,
   },
   noImageText: {
@@ -191,9 +254,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.3,   
     backgroundColor: '#f4f4f4', 
-    height: 120,
-    width: 120,
-    lineHeight: 110,
+    minHeight: 120,
+    minWidth: 120,
+    lineHeight: 40,
     
   },
   detailsContainer: {

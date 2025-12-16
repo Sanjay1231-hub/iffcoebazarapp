@@ -294,6 +294,7 @@ const LeaveApply = () => {
               onChangeText={setReason}
               placeholder="Enter the reason for your leave..."
               placeholderTextColor='#a3a3a3'
+              allowFontScaling={false}
             />
           </View>
 
@@ -360,14 +361,18 @@ const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: 15,
+    lineHeight: 20,            // Ensures text fits vertically
+    minHeight: 40,             // Use minHeight instead of fixed height
+    color: '#333',
+    backgroundColor: '#fff',
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    marginBottom: 10,
-    minHeight: 35,
+    borderRadius: 4,
+    paddingHorizontal: 8,      // Left/right padding
+    marginBottom: 2,
     letterSpacing: 0.3, 
-  },
+  },  
+  
   buttonContainer: {
     //flexDirection: 'row',
     //justifyContent: 'space-between',

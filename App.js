@@ -10,7 +10,6 @@ import AlertWithIcon from './Component/AlertWithIcon';
 import CkeckUpdate from './Component/CheckUpdate';
 import ErrorBoundary from './Component/ErrorBoundary';
 
-
 const AUTO_LOGOUT_TIME = 40 * 60 * 1000; // 40 minutes
 const TOKEN_STORAGE_KEY = 'ExponentPushToken[p1hZtFJkkse7DWBFkO_9rI]';
 

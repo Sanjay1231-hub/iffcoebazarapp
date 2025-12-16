@@ -177,6 +177,7 @@ const EmployeeDirectory = () => {
           value={searchQuery}
           onChangeText={handleSearch}
           placeholderTextColor="#a3a3a3"
+          allowFontScaling={false}
         />
         <Image style={[styles.calliing, { marginRight: 0 }]} source={require('../assets/filter.png')} />
       </View>
@@ -261,20 +262,22 @@ const EmployeeDirectory = () => {
       marginBottom: 7,
       borderWidth: 1,
       borderColor: '#ccc',
+       minHeight: 42,    // ✅ Pixel-safe
     },
     searchIcon: {
       marginRight: 8,        
-    },
-    searchInput: {
-       flex: 1, // allow it to expand between icons
-        fontSize: 16,
-        color: '#000',
-        paddingVertical: 0, // prevent extra height from internal padding
-        paddingHorizontal: 8,
-        textAlignVertical: 'center', // ✅ ensures vertical centering on Android
-        fontFamily: 'sans-serif',
-        height: 35,
     },       
+    searchInput: {
+      flex: 1,
+      fontSize: 16,
+      lineHeight: 22,          // ✅ CRITICAL
+      color: '#000',
+      paddingVertical: 8,      // ✅ give breathing space
+      paddingHorizontal: 8,
+      minHeight: 40,           // ✅ NOT height
+      textAlignVertical: 'center',
+      fontFamily: 'sans-serif',
+    },
     header: {
       flexDirection: 'row',
       width: '100%',

@@ -229,6 +229,7 @@ const CashDepositStore = () => {
                     value={formData.slipNo}
                     onChangeText={(text) => handleInputChange('slipNo', text)}
                     placeholderTextColor='#ddd'
+                    allowFontScaling={false}
                 />
             </View>
            
@@ -240,6 +241,7 @@ const CashDepositStore = () => {
                     value={formData.amountEntered}
                     onChangeText={(text) => /^[0-9]*\.?[0-9]*$/.test(text) && handleInputChange('amountEntered', text)}
                     keyboardType="decimal-pad"
+                    allowFontScaling={false}
                 />
             </View>         
 
@@ -255,6 +257,7 @@ const CashDepositStore = () => {
                         placeholder="--Select--"
                         value={selectedItem ? selectedItem.BANK_NAME : '---Select---'}
                         editable={false}
+                        allowFontScaling={false}
                     />
                     
                 </View>
@@ -296,6 +299,7 @@ const CashDepositStore = () => {
                     value={formData.reason}
                     onChangeText={(text) => handleInputChange('reason', text)}
                     placeholderTextColor='#ddd'
+                    allowFontScaling={false}
                 />
             </View>         
 
@@ -363,41 +367,45 @@ const styles = StyleSheet.create({
         letterSpacing: 0.3, 
     },
     textInput: {
-        //flex: 1,
+        flex: 1,
         fontSize: 15,
         borderColor: '#ccc',
         borderWidth: 1,
-        borderRadius: 5,
+        borderRadius: 4,
         paddingHorizontal: 8,
-        //marginBottom: 10,
-        height: 40,
+        //marginBottom: 2,
+        minHeight: 40,
         width: '100%',
         color: '#000',
         letterSpacing: 0.3, 
+        lineHeight: 22,
     },
     modalContainer: {
         flexDirection: 'row',
         alignItems: 'center',
     },   
     buttonLov: {
-        height: 40,
+        minHeight: 42,
+        width: 35,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#007BFF',
         //borderColor: '#007BFF',
         //borderWidth: 1,
+        lineHeight: 22,
         borderRadius: 5,
         paddingHorizontal: 5,
         //marginBottom: 10,
         marginRight: -33,
-        zIndex: 1
+        zIndex: 1,
+        
       },
     saveButton: {
         //backgroundColor: '#0063B2',
         backgroundColor: '#208cf3',
         marginTop: 10,
         borderRadius: 5,
-        height: 35,
+        minHeight: 35,
         alignItems: 'center',
         fontWeight: '500',
         //flex: 1,

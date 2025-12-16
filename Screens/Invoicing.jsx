@@ -42,6 +42,8 @@ export default function Invoicing() {
     const [orderId, setOrderId] = useState(null); // State to store orderId
     const [alert, setAlert] = useState({ visible: false, title: "", message: "", type: "" });
 
+    const API_BASE_URL = process.env.API_URL || 'https://ebazarapi.iffco.in/API';
+
       const navigation = useNavigation();
 
     // Fetch Order ID from API on page load
@@ -54,7 +56,8 @@ export default function Invoicing() {
                 apiId: "34",                
                 inApiParameters: [],
             };
-            const response = await fetch('https://ebazarapi.iffco.in/API', {
+            //const response = await fetch('https://ebazarapi.iffco.in/API', {
+            const response = await fetch(API_BASE_URL, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -929,10 +932,11 @@ export default function Invoicing() {
                 <View style={[styles.inputContainer, {marginBottom: 3, paddingRight: 15}]}>    
                         <AntDesign name='shopping-cart' size={24} color="#3d89fc" />           
                         <TextInput
-                        style={styles.textInput}
-                        placeholder="Select Products"
-                        placeholderTextColor="#545454"
-                        editable={false}
+                            style={styles.textInput}
+                            placeholder="Select Products"
+                            placeholderTextColor="#545454"
+                            editable={false}
+                            allowFontScaling={false}
                         />            
                         <AntDesign name={selectedTab === 'product' ? 'up' : 'down'} size={20} color="#3d89fc" />
                 </View>
@@ -957,35 +961,39 @@ export default function Invoicing() {
                                     <Ionicons name="search" size={20} color="white" />                                   
                                 </TouchableOpacity>
                                 <TextInput
-                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28}]}
+                                    style={[styles.input, { width: '99%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32}]}
                                     placeholder="--Select Product--"
                                     value={item.prdname}
                                     placeholderTextColor="#a3a3a3"
                                     editable={false} // Make the input non-editable, since the product will be selected from modal
+                                     allowFontScaling={false}
                                 />
                                 <TextInput
-                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, display: 'none', }]}
+                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32, display: 'none', }]}
                                     placeholder="--Select Product Code--"
                                     value={item.productcode}
                                     placeholderTextColor="#a3a3a3"
                                     editable={false} // Make the input non-editable, since the product will be selected from modal
+                                     allowFontScaling={false}
                                 />
                                 <TextInput
-                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, display: 'none', }]}
+                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32, display: 'none', }]}
                                     placeholder="--Select Bag Code--"
                                     value={item.bagcode}
                                     placeholderTextColor="#a3a3a3"
                                     editable={false} // Make the input non-editable, since the product will be selected from modal
+                                    allowFontScaling={false}
                                 />
                                 <TextInput
-                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, display: 'none', }]}
+                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32, display: 'none', }]}
                                     placeholder=""
                                     value={item.batchReq}
                                     placeholderTextColor="#a3a3a3"
                                     editable={false} // Make the input non-editable, since the product will be selected from modal
+                                    allowFontScaling={false}
                                 />
                                
-                                <TouchableOpacity onPress={() => removeRow(item.id)} style={[styles.deleteButton, { marginLeft: -28,}]}>
+                                <TouchableOpacity onPress={() => removeRow(item.id)} style={[styles.deleteButton, { marginLeft: -29,}]}>
                                     <View style={styles.deleteContent}>                                    
                                         <Ionicons name="trash-outline" size={18} color="#fff" />
                                     </View>
@@ -1012,6 +1020,7 @@ export default function Invoicing() {
                                                     value={searchPrdQuery}
                                                     onChangeText={handlePrdSearch}
                                                     placeholderTextColor="#a3a3a3"
+                                                     allowFontScaling={false}
                                                 />
                                                 <Ionicons name="search" size={22} color="#a3a3a3" style={styles.Searchbtn} />
                                             </View>
@@ -1076,20 +1085,21 @@ export default function Invoicing() {
                                     <Ionicons name="search" size={20} color="#fff" />
                                 </TouchableOpacity>
                                 <TextInput
-                                style={[styles.input, { width: '29%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, marginRight: 3 }]}
-                                placeholder=""
-                                value={item.rate}
-                                editable={false}
-                                placeholderTextColor="#a3a3a3"
-
+                                    style={[styles.input, { width: '29%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, marginRight: 3 }]}
+                                    placeholder=""
+                                    value={item.rate}
+                                    editable={false}
+                                    placeholderTextColor="#a3a3a3"
+                                    allowFontScaling={false}
                                 />
                                 <TextInput
-                                style={[styles.input, { width: '20%', color: '#333', backgroundColor: '#f0f0f0', display: 'none', paddingLeft: 10 }]}
-                                placeholder="--Rate id--"
-                                value={item.rateId}
-                                editable={false}
-                                placeholderTextColor="#a3a3a3"
-                                />                               
+                                    style={[styles.input, { width: '20%', color: '#333', backgroundColor: '#f0f0f0', display: 'none', paddingLeft: 10 }]}
+                                    placeholder="--Rate id--"
+                                    value={item.rateId}
+                                    editable={false}
+                                    placeholderTextColor="#a3a3a3"
+                                    allowFontScaling={false}
+                                    />                               
                                
 
                                 <Modal
@@ -1163,12 +1173,12 @@ export default function Invoicing() {
                                     <Ionicons name="search" size={20} color="#fff" />
                                 </TouchableOpacity>
                                 <TextInput
-                                style={[styles.input, { width: '57%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28 }]}
+                                style={[styles.input, { width: '57%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32 }]}
                                 placeholder="--Select Batch--"
                                 value={item.batch}
                                 editable={false}
                                 placeholderTextColor="#a3a3a3"
-
+                                allowFontScaling={false}
                                 />
                                 
 
@@ -1245,6 +1255,7 @@ export default function Invoicing() {
                                 keyboardType="numeric"
                                 onChangeText={(text) => handleInputChange(text, 'qty', item.id)}
                                 placeholderTextColor="#a3a3a3"
+                                 allowFontScaling={false}
 
                                 /> */}
 
@@ -1259,16 +1270,17 @@ export default function Invoicing() {
                                         handleInputChange(intValue, 'qty', item.id);
                                     }}
                                     placeholderTextColor="#a3a3a3"
+                                     allowFontScaling={false}
                                     />
 
-                                <Text style={[styles.label, { paddingRight: 4, paddingLeft: 4}]}>Value:</Text> 
+                                <Text style={[styles.label, { paddingRight: 5, paddingLeft: 5}]}>Value:</Text> 
                                 <TextInput
-                                style={[styles.input, { width: '48%', color: '#333', backgroundColor: '#f0f0f0' }]}
-                                placeholder="Net Value"
-                                value={item.value ? item.value.toString() : ''}
-                                placeholderTextColor="#a3a3a3"
-                                editable={false}
-
+                                    style={[styles.input, { width: '47%', color: '#333', backgroundColor: '#f0f0f0' }]}
+                                    placeholder="Net Value"
+                                    value={item.value ? item.value.toString() : ''}
+                                    placeholderTextColor="#a3a3a3"
+                                    editable={false}
+                                    allowFontScaling={false}
                                 />
                                 
                             </View>                            
@@ -1305,6 +1317,7 @@ export default function Invoicing() {
                 placeholder="Select Customer"
                  placeholderTextColor="#545454"
                 editable={false}
+                 allowFontScaling={false}
                 />            
                 <AntDesign name={selectedTab === 'customer' ? 'up' : 'down'} size={20} color="#3d89fc" />   
             </View>
@@ -1318,11 +1331,12 @@ export default function Invoicing() {
                         <Ionicons name="search" size={20} color="white" />
                     </TouchableOpacity>
                     <TextInput
-                        style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28}]}
+                        style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -34}]}
                         placeholder="--Select Customer--"
                         value={selectedCname}
                         editable={false}
                         placeholderTextColor="#a3a3a3"
+                         allowFontScaling={false}
                     />                
                     
 
@@ -1347,6 +1361,7 @@ export default function Invoicing() {
                                         value={searchQuery}
                                         onChangeText={handleSearch}
                                         placeholderTextColor="#a3a3a3"
+                                         allowFontScaling={false}
                                     />
                                     <Ionicons name="search" size={22} color="#a3a3a3" style={styles.Searchbtn} />
                                 </View>
@@ -1394,6 +1409,7 @@ export default function Invoicing() {
                             style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
                             value={selectedCustId}
                             editable={false}
+                             allowFontScaling={false}
                         />
                     </View>
                     {/* Phone Row */}
@@ -1403,6 +1419,7 @@ export default function Invoicing() {
                             style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
                             value={selectedCustPhone}
                             editable={false}
+                             allowFontScaling={false}
                         />
                     </View>
 
@@ -1413,6 +1430,7 @@ export default function Invoicing() {
                             style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
                             value={selectedCustState}
                             editable={false}
+                             allowFontScaling={false}
                         />
                     </View>              
                 </View>
@@ -1431,6 +1449,7 @@ export default function Invoicing() {
                 placeholder="Payment Method"
                 placeholderTextColor="#545454"
                 editable={false}
+                 allowFontScaling={false}
                 />            
                 <AntDesign name={selectedTab === 'payment' ? 'up' : 'down'} size={20} color="#3d89fc" />   
             </View>
@@ -1443,11 +1462,12 @@ export default function Invoicing() {
                         <Ionicons name="search" size={20} color="white" />
                     </TouchableOpacity>
                     <TextInput
-                        style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28}]}
+                        style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -34}]}
                         placeholder="--Select Payment Method--"
                         value={paymentMethod}
                         editable={false}
                         placeholderTextColor="#a3a3a3"
+                         allowFontScaling={false}
                     />                
                    
 
@@ -1622,7 +1642,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         borderRadius: 6,
         backgroundColor: '#fff',
-        height: 45, // set a consistent container height
+        minHeight: 45, // set a consistent container height
+        lineHeight: 22,
     },
     summaryheader: {
         flexDirection: 'row',
@@ -1713,15 +1734,18 @@ const styles = StyleSheet.create({
         letterSpacing: 0.3,
     },
     input: {
-        height: 40,
-        flex: 1,
         fontSize: 15,
-        color: '#333',
-        borderColor: '#ccc',
+        lineHeight: 20,            // ensures text fits inside input
+        minHeight: 35,             // use minHeight instead of fixed height
+        letterSpacing: 0.3,
         borderWidth: 1,
+        borderColor: "#ccc",
         borderRadius: 4,
-        paddingLeft: 8,
-        textAlignVertical: 'center',
+        paddingHorizontal: 8,
+        paddingVertical: 6,        // vertical breathing space for text
+        color: '#333',
+        backgroundColor: "#ffffff",
+        textAlignVertical: 'center', // Android vertical alignment
     },   
     modalContent: {
         backgroundColor: '#fff',
@@ -1775,7 +1799,7 @@ const styles = StyleSheet.create({
         fontFamily: 'sans-serif',
         },
     buttonLov: {
-        height: 40,
+        minHeight: 35,
         width: 35,
         justifyContent: 'center',
         alignItems: 'center',
@@ -1904,7 +1928,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         //borderWidth: 1,
         //borderColor: '#f55105',
-        height: 40,
+        minHeight: 35,
         borderRadius: 4,
     },
     deleteContent: {
@@ -1995,11 +2019,12 @@ const styles = StyleSheet.create({
         
     },
     odText: {
-        color: '#0000ff',
-        textDecorationLine: 'underline',
-        fontSize: 16,
-        fontWeight: '400',
-        letterSpacing: 0.1,
-        marginBottom: 10, 
+        color: '#0000ff',                // Blue text
+        textDecorationLine: 'underline', // Underlined
+        fontSize: 16,                     // Font size
+        fontWeight: '400',                // Normal weight
+        letterSpacing: 0.3,               // Slight spacing between letters
+        marginBottom: 5,                  // Space below the text
+        lineHeight: 20,  
     },
 });

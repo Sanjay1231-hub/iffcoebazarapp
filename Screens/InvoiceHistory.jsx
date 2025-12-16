@@ -118,7 +118,7 @@ const InvoiceHistory = () => {
 
     const RenderItemComponent = React.memo(({ item }) => (        
         <View style={styles.row}>
-            <Text style={[styles.cell, { flex: 2.5, textAlign: 'left' }]}>
+            <Text style={[styles.cell, { flex: 2.2, textAlign: 'left' }]}>
                 {item.INVOICE_NO || 'No data'}
             </Text>         
             <Text style={[styles.cell, { flex: 1, textAlign: 'right' }]}>
@@ -161,7 +161,7 @@ const InvoiceHistory = () => {
     <View style={styles.container}>
         {/* Header */}
         <View style={styles.header}>                           
-            <Text style={[styles.headerText, { flex: 2.25, textAlign: 'center' }]}>Invoice No</Text>
+            <Text style={[styles.headerText, { flex: 2, textAlign: 'center' }]}>Invoice No</Text>
             <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Date</Text>
             <Text style={[styles.headerText, { flex: 0.54, textAlign: 'center' }]}>Qty</Text>
             <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Amount</Text>
@@ -209,7 +209,7 @@ const InvoiceHistory = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 5,
+        padding: 1,
         backgroundColor: '#ffffff',
       },
 
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
      calliing: {
       backgroundColor: '#ffffff',      
       width: 24,
-      height: 24,   
+      minHeight: 24,   
       textAlign: 'center',
     }, 
 });

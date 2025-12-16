@@ -281,6 +281,7 @@ return (
             placeholder="HH.MM"
             placeholderTextColor="#a3a3a3"
             maxLength={5}
+             allowFontScaling={false}
             //keyboardType="numeric"
         />
       </View>
@@ -293,6 +294,7 @@ return (
             //onChangeText={handleToTimeChange}
             placeholder="HH.MM"
             placeholderTextColor="#a3a3a3"
+             allowFontScaling={false}
             maxLength={5}
             //keyboardType="numeric"
         />
@@ -313,6 +315,7 @@ return (
         onChangeText={setReason}
         placeholder="Enter the reason for your leave"
         placeholderTextColor='#a3a3a3'
+         allowFontScaling={false}
       />
 
       <View style={styles.buttonContainer}>

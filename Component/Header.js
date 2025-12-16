@@ -12,6 +12,8 @@ const Header = ({ onLogout }) => {
   const [empPhoto, setEmpPhoto] = useState(null);
   const [officeType, setOfficeType] = useState(null);
   const [isPressed, setIsPressed] = useState(false);
+  
+  const API_BASE_URL = process.env.API_URL || 'https://ebazarapi.iffco.in/API';
 
 useEffect(() => {
   const fetchOfficeType = async () => {
@@ -26,15 +28,76 @@ useEffect(() => {
   // Animated Value for Slide Effect
   const slideAnim = useRef(new Animated.Value(-300)).current; // Start off-screen (left)
 
+  // useEffect(() => {
+  //   // const getPhoto = async () => {
+  //   //   const photo = await AsyncStorage.getItem('empPhoto');
+  //   //   if (photo) {
+  //   //     setEmpPhoto(photo);
+  //   //   }
+  //   // };
+  //   // getPhoto();   
+  // }, []);
+
   useEffect(() => {
-    const getPhoto = async () => {
-      const photo = await AsyncStorage.getItem('empPhoto');
-      if (photo) {
-        setEmpPhoto(photo);
+  const fetchEmployeePhoto = async () => {
+  
+    try {
+      setLoading(true);
+
+      const loggedPno = await AsyncStorage.getItem('empPno');
+
+      if (!loggedPno) {
+        console.warn('empPno not found in storage');
+        return;
       }
-    };
-    getPhoto();
-  }, []);
+
+      const postData = {
+        token: 'IEBL0001',
+        apiId: '4',
+        inApiParameters: [
+          { label: 'P_PERSONAL_NO', value: String(loggedPno) },
+        ],
+      };
+
+      const response = await fetch(API_BASE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(postData),
+      });
+
+      const rawText = await response.text();
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+
+      const json = JSON.parse(rawText);
+      const userData = json?.output?.[0];
+
+     
+
+      if (userData?.EMP_PHOTO) {
+        setEmpPhoto(userData.EMP_PHOTO);
+      } else {
+        setEmpPhoto(null);
+      }
+    } catch (err) {
+      console.error('Photo fetch failed:', err.message);
+      setEmpPhoto(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchEmployeePhoto();
+  
+
+}, []);
+
+
+
 
   useEffect(() => {
     const fetchLoggedUserData = async () => {
@@ -138,105 +201,105 @@ useEffect(() => {
 
       {/* Sidebar Modal */}
       <Modal transparent={true} visible={sidebarVisible} animationType="none">
-        <View style={styles.fullScreenContainer}>
+        <View style={styles.fullScreenContainer}  pointerEvents="box-none">
           {/* Clickable overlay to close the sidebar */}
           <TouchableOpacity style={styles.overlay} activeOpacity={1} onPress={closeSidebar} />    
           {/* Sidebar */}
           <Animated.View style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}>
             <TouchableOpacity onPress={closeSidebar} style={styles.closeButton}>
-              <AntDesign name="arrow-left" size={20} color="#333" />
+              {/* <AntDesign name="arrow-left" size={20} color="#333" /> */}
             </TouchableOpacity>
             <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
-            {loading ? (
-                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                  <View style={{ transform: [{ scale: 0.6 }] }}>
-                    <ActivityIndicator size={50} color="#4a80f5" />
-                  </View>
-                </View>
-              ) : (
-              loggedUserDetails ? (
-                <View>
-                  {/* User Info Section */} 
-                  <View style={styles.profileSection}>
-                    {/* User Image */}                  
-
-                    {empPhoto ? (
-                      <Image
-                        source={{ uri: `data:image/jpeg;base64,${empPhoto}` }} // Assuming it's a JPEG image
-                        style={styles.profileImage}
-                      />
-                    ) : (
-                      <Text style={styles.userInfo}>No Image Available</Text>
-                    )}
-                    
-                    <Text style={styles.sidebarTitle}>{loggedUserDetails.empName}</Text>
-                    <Text style={styles.userInfo}>+91 - {loggedUserDetails.mobilleNo}</Text>
-                    <Text 
-                      style={styles.userInfo} 
-                      //onPress={() => Linking.openURL(`mailto:${loggedUserDetails.PersonalEmail}`)}
-                    >{loggedUserDetails.PersonalEmail}</Text>
-                  </View>
-
-       {/* Office Details Section */}
-                  <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Office Details</Text>
-                    {/* <View style={styles.innersection}> */}
-                    <Text><Text style={styles.label}>Email: </Text><Text style={styles.userInfo}>{loggedUserDetails.OfficeEmail}</Text></Text>               
-                    <Text><Text style={styles.label}>Department: </Text><Text style={styles.userInfo}>{loggedUserDetails.departmentName}</Text></Text>
-                    <Text><Text style={styles.label}>Unit: </Text><Text style={styles.userInfo}>{loggedUserDetails.UnitName}</Text></Text>
-                    <Text><Text style={styles.label}>Designation: </Text><Text style={styles.userInfo}>{loggedUserDetails.Designation}</Text></Text>
-                    <Text><Text style={styles.label}>Grade: </Text><Text style={styles.userInfo}>{loggedUserDetails.GradeCode}</Text></Text>
-                    <Text><Text style={styles.label}>Office Code: </Text><Text style={styles.userInfo}>{loggedUserDetails.office_code}</Text></Text>
-                    <Text><Text style={styles.label}>State Code: </Text><Text style={styles.userInfo}>{loggedUserDetails.stateCd}</Text></Text>
-                  {/* </View> */}
-                    </View>         
-
-                  {trimedOfficeCode?.slice(0, 2) === "IB" && officeType === null && (
-                    <View style={styles.section}>
-                      <Text style={styles.sectionTitle}>Store Details</Text>
-                      <Text>
-                        <Text style={styles.label}>State Name: </Text>
-                        <Text style={styles.userInfo}>{loggedUserDetails.EmpStateName}</Text>
-                      </Text>
-                      <Text>
-                        <Text style={styles.label}>Store Name: </Text>
-                        <Text style={styles.userInfo}>{loggedUserDetails.EmpStoreName}</Text>
-                      </Text>
+                {loading ? (
+                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                      <View style={{ transform: [{ scale: 0.6 }] }}>
+                        <ActivityIndicator size={50} color="#4a80f5" />
+                      </View>
                     </View>
-                  )}
+                  ) : (
+                  loggedUserDetails ? (
+                    <View>
+                      {/* User Info Section */} 
+                      <View style={styles.profileSection}>
+                        {/* User Image */}                  
 
-                  {/* Additional Details Section */}
-                  <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Bank Details</Text>
-                    <Text><Text style={styles.label}>Bank Name: </Text><Text style={styles.userInfo}>{loggedUserDetails.EmpBankName}</Text></Text>
-                    <Text><Text style={styles.label}>IFSC Code: </Text><Text style={styles.userInfo}>{loggedUserDetails.EmpBankIFSC}</Text></Text>
-                    <Text><Text style={styles.label}>Account No.: </Text><Text style={styles.userInfo}>{loggedUserDetails.EmpAccountNo}</Text></Text>
-                  </View>
-                  {/* Other Details Section */}
-                  <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Other Details</Text>
-                    <Text>
-                      <Text style={styles.label}>Blood Group: </Text>
-                      <Text style={styles.userInfo}>{loggedUserDetails.EmpBloodGroup}</Text>
-                    </Text>
+                        {empPhoto ? (
+                          <Image
+                            source={{ uri: `data:image/jpeg;base64,${empPhoto}` }} // Assuming it's a JPEG image
+                            style={styles.profileImage}
+                          />
+                        ) : (
+                          <Text style={styles.userInfo}>No Image Available</Text>
+                        )}
+                        
+                        <Text style={styles.sidebarTitle}>{loggedUserDetails.empName}</Text>
+                        <Text style={styles.userInfo}>+91 - {loggedUserDetails.mobilleNo}</Text>
+                        <Text 
+                          style={styles.userInfo} 
+                          //onPress={() => Linking.openURL(`mailto:${loggedUserDetails.PersonalEmail}`)}
+                        >{loggedUserDetails.PersonalEmail}</Text>
+                      </View>
 
-                  </View>
-                  {/* Logout Button */}
-                  {/* <TouchableOpacity style={[
-                      styles.sidebarLogoutButton,
-                      { borderColor: isPressed ? '#ff4d4d' : '#ddd' } // Change border color on press
-                    ]} onPress={() => setLogoutModalVisible(true)}>
-                    <Text style={styles.sidebarLogoutText}>Logout</Text>
-                  </TouchableOpacity> */}
-                   {/* <TouchableOpacity onPress={() => Linking.openURL('https://docs.google.com/document/d/1mVa1LjlG8G68UmKRbQNrdAquKzP1pjahU0SzOwm35iI/edit?usp=sharing')}>
-          <Text style={{ color: 'blue', textDecorationLine: 'underline' }}>Privacy Policy</Text>
-        </TouchableOpacity> */}
-                </View>
-              ) : (
-                <Text style={styles.userInfo}>No user details found.</Text>
-              )
-            )}
-  </ScrollView>
+          {/* Office Details Section */}
+                      <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Office Details</Text>
+                        {/* <View style={styles.innersection}> */}
+                        <Text><Text style={styles.label}>Email: </Text><Text style={styles.userInfo}>{loggedUserDetails.OfficeEmail}</Text></Text>               
+                        <Text><Text style={styles.label}>Department: </Text><Text style={styles.userInfo}>{loggedUserDetails.departmentName}</Text></Text>
+                        <Text><Text style={styles.label}>Unit: </Text><Text style={styles.userInfo}>{loggedUserDetails.UnitName}</Text></Text>
+                        <Text><Text style={styles.label}>Designation: </Text><Text style={styles.userInfo}>{loggedUserDetails.Designation}</Text></Text>
+                        <Text><Text style={styles.label}>Grade: </Text><Text style={styles.userInfo}>{loggedUserDetails.GradeCode}</Text></Text>
+                        <Text><Text style={styles.label}>Office Code: </Text><Text style={styles.userInfo}>{loggedUserDetails.office_code}</Text></Text>
+                        <Text><Text style={styles.label}>State Code: </Text><Text style={styles.userInfo}>{loggedUserDetails.stateCd}</Text></Text>
+                      {/* </View> */}
+                        </View>         
+
+                      {trimedOfficeCode?.slice(0, 2) === "IB" && officeType === null && (
+                        <View style={styles.section}>
+                          <Text style={styles.sectionTitle}>Store Details</Text>
+                          <Text>
+                            <Text style={styles.label}>State Name: </Text>
+                            <Text style={styles.userInfo}>{loggedUserDetails.EmpStateName}</Text>
+                          </Text>
+                          <Text>
+                            <Text style={styles.label}>Store Name: </Text>
+                            <Text style={styles.userInfo}>{loggedUserDetails.EmpStoreName}</Text>
+                          </Text>
+                        </View>
+                      )}
+
+                      {/* Additional Details Section */}
+                      <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Bank Details</Text>
+                        <Text><Text style={styles.label}>Bank Name: </Text><Text style={styles.userInfo}>{loggedUserDetails.EmpBankName}</Text></Text>
+                        <Text><Text style={styles.label}>IFSC Code: </Text><Text style={styles.userInfo}>{loggedUserDetails.EmpBankIFSC}</Text></Text>
+                        <Text><Text style={styles.label}>Account No.: </Text><Text style={styles.userInfo}>{loggedUserDetails.EmpAccountNo}</Text></Text>
+                      </View>
+                      {/* Other Details Section */}
+                      <View style={styles.section}>
+                        <Text style={styles.sectionTitle}>Other Details</Text>
+                        <Text>
+                          <Text style={styles.label}>Blood Group: </Text>
+                          <Text style={styles.userInfo}>{loggedUserDetails.EmpBloodGroup}</Text>
+                        </Text>
+
+                      </View>
+                      {/* Logout Button */}
+                      {/* <TouchableOpacity style={[
+                          styles.sidebarLogoutButton,
+                          { borderColor: isPressed ? '#ff4d4d' : '#ddd' } // Change border color on press
+                        ]} onPress={() => setLogoutModalVisible(true)}>
+                        <Text style={styles.sidebarLogoutText}>Logout</Text>
+                      </TouchableOpacity> */}
+                      {/* <TouchableOpacity onPress={() => Linking.openURL('https://docs.google.com/document/d/1mVa1LjlG8G68UmKRbQNrdAquKzP1pjahU0SzOwm35iI/edit?usp=sharing')}>
+              <Text style={{ color: 'blue', textDecorationLine: 'underline' }}>Privacy Policy</Text>
+            </TouchableOpacity> */}
+                    </View>
+                  ) : (
+                    <Text style={styles.userInfo}>No user details found.</Text>
+                  )
+                )}
+            </ScrollView>
            
           </Animated.View>          
         </View>
@@ -278,7 +341,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
-    height: 80,
+    minHeight: 80,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -310,20 +373,24 @@ const styles = StyleSheet.create({
   /* Sidebar Styles */
   fullScreenContainer: {
     flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+     flexDirection: 'row',
+    //justifyContent: 'flex-start',
+    //alignItems: 'flex-start',
   },  
   overlay: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    //zIndex: 1,
   },  
   sidebar: {
-    width: 300,
+    width: '80%',
     height: '100%',
     //backgroundColor: '#fff',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     padding: 10,
     position: 'absolute',
     left: 0,
@@ -331,10 +398,13 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    elevation: 5,
+    elevation: 10,
+    zIndex: 2,
   },  
   closeButton: {
     alignSelf: 'flex-end',
+    minHeight: 30,
+    padding: 12,
   },
   sidebarTitle: {
     fontSize: 16,

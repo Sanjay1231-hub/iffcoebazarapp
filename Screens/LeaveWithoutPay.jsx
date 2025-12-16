@@ -204,6 +204,7 @@ const LeaveWithoutPay = () => {
         onChangeText={setReason}
         placeholder="Enter the reason for your leave"
         placeholderTextColor='#797979'
+        allowFontScaling={false}
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>

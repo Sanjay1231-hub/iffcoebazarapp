@@ -7,6 +7,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AlertWithIcon from '../Component/AlertWithIcon';
 import { WebView } from 'react-native-webview';   // ✅ Import WebView
+//import globalstyles from '../assets/styles/globalstyles';
+
+ const API_BASE_URL = process.env.API_URL || 'https://ebazarapi.iffco.in/API';
 
 const SalarySlip = () => { 
   const [loading, setLoading] = useState(true);
@@ -27,7 +30,7 @@ const SalarySlip = () => {
           token: "IEBL0001",
         };
     
-        const response = await fetch('https://ebazarapi.iffco.in/API', {
+        const response = await fetch(API_BASE_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -266,7 +269,7 @@ const openPdfNew = async () => {
     <View style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.label}>Select YearMonth<Text style={styles.asterisk}>*</Text></Text>
-          <View style={styles.modalcontainer}>
+          <View style={styles.modalcontainerInput}>
               <TouchableOpacity style={styles.buttonLov} onPress={() => setModalVisible(true)}>
                   <Ionicons name="search" size={22} color="white" />
               </TouchableOpacity>
@@ -275,6 +278,7 @@ const openPdfNew = async () => {
                   placeholder="--Select--"
                   value={selectedValue}
                   editable={false}
+                  allowFontScaling={false}
               />
           </View>
             <Modal
@@ -370,14 +374,14 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 10, backgroundColor: '#fff' },
   section: { padding: 10, backgroundColor: '#f7f8fa', borderWidth: 1, borderRadius: 6, borderColor: '#f7f9fc' },
   label: { fontSize: 16, marginBottom: 6, color: '#424242', fontWeight: '500' },
-  modalcontainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 5 },
-  textInput: { fontSize: 15, color: '#333', borderColor: '#ccc', borderWidth: 1, borderRadius: 5, paddingHorizontal: 10, height: 40 },
-  buttonLov: { height: 40, width: 35, justifyContent: 'center', alignItems: 'center', backgroundColor: '#007BFF', borderRadius: 5, paddingHorizontal: 5, marginRight: -33, zIndex: 1 },
+  modalcontainerInput: { flexDirection: 'row', alignItems: 'center', marginBottom: 5 },
+  textInput: { fontSize: 15, color: '#333', borderColor: '#ccc', borderWidth: 1, borderRadius: 4, paddingHorizontal: 8, minHeight: 40 },
+  buttonLov: { minHeight: 40, width: 35, justifyContent: 'center', alignItems: 'center', backgroundColor: '#007BFF', borderRadius: 4, marginRight: -33, zIndex: 1 },
   modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
   modalContent: { flex: 1, width: '70%', maxHeight: 450, backgroundColor: '#e4e4e4', borderRadius: 2, padding: 5 },
   modalTitle: { fontSize: 14, fontWeight: '500', color: '#000' },
   lovclose: { textAlign: 'center' },
-  headerText: { flex: 1, textAlign: 'center', fontSize: 13, color: '#fff', borderRightWidth: 1, borderColor: '#fff' },
+  headerText: { flex: 1, textAlign: 'center', fontSize: 14, color: '#fff', borderRightWidth: 1, borderColor: '#fff', padding: 4 },
   row: { flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderColor: '#ccc' },
   cell: { flex: 1, textAlign: 'center', padding: 5, backgroundColor: '#ffffffff', },
   header: { flexDirection: 'row', width: '100%', justifyContent: 'space-between', backgroundColor: '#6c80ad' },

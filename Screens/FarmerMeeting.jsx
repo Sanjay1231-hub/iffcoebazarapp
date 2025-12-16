@@ -512,18 +512,19 @@ const styles = StyleSheet.create({
 
     },
     input: {
-        //flex: 3, // takes 2 parts (right column)
-        height: 40,
+        fontSize: 15,
+        lineHeight: 20,            // ensures text fits inside input
+        minHeight: 40,             // use minHeight instead of fixed height
         width: '60%',
-        letterSpacing: 0.3, 
+        letterSpacing: 0.3,
         borderWidth: 1,
         borderColor: "#ccc",
         borderRadius: 4,
         paddingHorizontal: 8,
-        //paddingVertical: 6,
+        paddingVertical: 6,        // vertical breathing space for text
         color: '#333',
-        fontSize: 15,
         backgroundColor: "#ffffff",
+        textAlignVertical: 'center', // Android vertical alignment
     },
    
     cell: {

@@ -240,6 +240,7 @@ const Recieving = () => {
                     placeholder="--Select--"
                     value={selectedValue}
                     editable={false}
+                     allowFontScaling={false}
                 />
                 
                 
@@ -343,6 +344,7 @@ const Recieving = () => {
                   style={[styles.textInput, {backgroundColor: '#f0f0f0'}]} 
                   value={purchaseNo} 
                   editable={false} 
+                   allowFontScaling={false}
               />
             </View>
 
@@ -352,17 +354,23 @@ const Recieving = () => {
                 style={[styles.textInput, {backgroundColor: '#f0f0f0'}]}  
                 value={purchaseDate} 
                 editable={false} 
+                 allowFontScaling={false}
                 />
              </View>
            
               <View style={styles.section}>
                 <Text style={styles.label}>Purchase Qty<Text style={styles.asterisk}>*</Text></Text>
-                <TextInput style={[styles.textInput, {backgroundColor: '#f0f0f0'}]}  value={qty.toString()} editable={false} />
+                <TextInput 
+                style={[styles.textInput, {backgroundColor: '#f0f0f0'}]}  
+                value={qty.toString()} 
+                editable={false}
+                allowFontScaling={false}
+                 />
               </View>           
 
               <View style={styles.section}>
                 <Text style={styles.label}>Receipt Date<Text style={styles.asterisk}>*</Text></Text>
-                <TextInput style={[styles.textInput, {backgroundColor: '#f0f0f0'}]}  value={currentDate} editable={false} />
+                <TextInput style={[styles.textInput, {backgroundColor: '#f0f0f0'}]}  value={currentDate} editable={false} allowFontScaling={false} />
               </View>            
 
              <View style={styles.section}>
@@ -404,6 +412,7 @@ const Recieving = () => {
                   }}
                   placeholderTextColor="#a3a3a3"
                   keyboardType="numeric"
+                  allowFontScaling={false}
               />
              </View>
 

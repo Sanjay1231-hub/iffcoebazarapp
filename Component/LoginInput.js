@@ -71,9 +71,12 @@ const styles = StyleSheet.create({
     },
     input: {
       flex: 1,
-      height: 36,
-      fontSize: 14, 
+      fontSize: 14,
+      lineHeight: 20,        // Pixel-safe
+      paddingVertical: 6,    // space around text
       letterSpacing: 0.3,
+      minHeight: 36,         // use minHeight instead of fixed height
+      textAlignVertical: 'center', // vertical centering
     },
   
 });

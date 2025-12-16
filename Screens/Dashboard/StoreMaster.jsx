@@ -114,6 +114,7 @@ function StoreMaster() {
             value={searchQuery}
             onChangeText={handleSearch}
             placeholderTextColor="#a3a3a3"
+            allowFontScaling={false}
           />
           {/* <Ionicons name="filter-outline" size={22} color="#a3a3a3" style={styles.Searchbtn} /> */}
           {/* <Ionicons name="filter-outline" size={24} color="black" style={styles.Searchbtn} /> */}
@@ -194,16 +195,15 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
       },
       searchInput: {
-        flex: 1,
-        height: 35,
-        fontSize: 15,
-        color: '#333',
-        backgroundColor: '#ffffff',
-        borderRadius: 3,
-        // paddingHorizontal: 10,
-        // //marginBottom: 7,
-        // borderWidth: 1,
-        // borderColor: '#ccc',
+          flex: 1,
+          fontSize: 16,
+          lineHeight: 22,          // ✅ CRITICAL
+          color: '#000',
+          paddingVertical: 8,      // ✅ give breathing space
+          //paddingHorizontal: 6,
+          minHeight: 40,           // ✅ NOT height
+          textAlignVertical: 'center',
+          fontFamily: 'sans-serif',
       },
       Searchbtn: {
         marginLeft: 15,        

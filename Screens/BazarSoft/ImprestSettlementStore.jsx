@@ -464,6 +464,7 @@ const pickDocument = async () => {
                               placeholder="--Select--"
                               value={expHead}
                               placeholderTextColor="#a3a3a3"
+                              allowFontScaling={false}
                               editable={false} // Make the input non-editable, since the product will be selected from modal
                           />                    
 
@@ -529,6 +530,7 @@ const pickDocument = async () => {
                               placeholder="--Select--"
                               value={glslcd}
                               placeholderTextColor="#a3a3a3"
+                              allowFontScaling={false}
                               editable={false} // Make the input non-editable, since the product will be selected from modal
                           />
                       </View>
@@ -565,6 +567,7 @@ const pickDocument = async () => {
                               onChangeText={handleExpAmountChange}
                               placeholder="00.00"
                               placeholderTextColor="#a3a3a3"
+                              allowFontScaling={false}
                           />
                       </View>                         
 
@@ -574,6 +577,7 @@ const pickDocument = async () => {
                               style={[styles.input, { width: '73%', color: '#333' }]}
                               value={reason}
                               onChangeText={setReason}
+                              allowFontScaling={false}
                           />
                       </View>  
                   </View>  
@@ -584,6 +588,7 @@ const pickDocument = async () => {
                               style={[styles.input, { width: '73%', color: '#333' }]}
                               value={billNo}
                               onChangeText={setBillNo}
+                              allowFontScaling={false}
                           />
                       </View>   
 

@@ -19,7 +19,7 @@ function Home() {
   const [loggedEmpRole, setLoggedEmpRole] = useState(null);
   const rolesForODApply       = ["HO", "STORE", "HELPER"];   // allowed roles
   const rolesForApproval      = ["IF", "RM"];      // verified roles
-  const rolesForBazarSoft     = ["STORE", "HELPER"];         // only store
+  const rolesForBazarSoft     = ["STORE"];         // only store
 
 
   useEffect(() => {
@@ -130,13 +130,7 @@ function Home() {
             </View>
           )}     
 
-           {rolesForODApply.includes(loggedEmpRole) && (
-             <View style={styles.containerbutton}>
-              <HomeButton onPress={() => navigateToScreen("PartyLedgerReport")} title="PartyLedgerReport" icon="document-text-outline">
-              </HomeButton>
-              <Text style={styles.buttonText}>Party Ledger</Text>
-            </View>
-          )}          
+                
      
 
         
@@ -211,6 +205,14 @@ function Home() {
                 <Text style={styles.buttonText}>Indent</Text>
               </View>
             )}
+
+             {/* {rolesForODApply.includes(loggedEmpRole) && (
+             <View style={styles.containerbutton}>
+              <HomeButton onPress={() => navigateToScreen("PartyLedgerReport")} title="PartyLedgerReport" icon="document-text-outline">
+              </HomeButton>
+              <Text style={styles.buttonText}>Party Ledger</Text>
+            </View>
+          )}     */}
 
             
           </View>
