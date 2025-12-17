@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         paddingHorizontal: 8,
         //marginBottom: 2,
-        minHeight: 40,
+        height: 40,
         width: '100%',
         color: '#000',
         letterSpacing: 0.3, 
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },   
     buttonLov: {
-        minHeight: 42,
+        height: 40,
         width: 35,
         justifyContent: 'center',
         alignItems: 'center',

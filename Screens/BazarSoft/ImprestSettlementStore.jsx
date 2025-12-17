@@ -664,7 +664,7 @@ const pickDocument = async () => {
                           </>
                         ) : (
                           <>
-                            <Ionicons name="save-outline" size={22} color="#fff" />
+                            {/* <Ionicons name="save-outline" size={22} color="#fff" /> */}
                             <Text style={{ paddingHorizontal: 20, color: '#fff', fontSize: 16 }}>Save</Text>
                           </>
                         )}
@@ -727,7 +727,7 @@ const styles = StyleSheet.create({
         //marginBottom: 100       
       },
     input: {
-        height: 38,
+        height: 40,
         //flex: 1,
         fontSize: 14,
         color: '#333',
@@ -769,7 +769,7 @@ const styles = StyleSheet.create({
         width: '100%',        
     },
     buttonLov: {
-        height: 38,
+        height: 40,
         width: 35,
         justifyContent: 'center',
         alignItems: 'center',
@@ -838,21 +838,18 @@ const styles = StyleSheet.create({
 
     submitButton: {
         backgroundColor: '#208cf3',
-        //marginTop: 10,
-        paddingHorizontal: 10,
-        height: 35,
-        justifyContent: 'center',
-        alignItems: 'center',
+        width: '94%',
+        marginTop: 10,
+        marginBottom: 20,
         borderRadius: 5,
-        // width: '90%',
-         // Shadow for iOS
-        shadowColor: '#000', // Color of the shadow
-        shadowOffset: { width: 0, height: 4 }, // Shadow offset (x, y)
-        shadowOpacity: 0.1, // Transparency of the shadow
-        shadowRadius: 5, // Blur effect of the shadow
-        // Shadow for Android
-        elevation: 5, // Elevation for Android shadow
-        //marginBottom: 200, 
+        minHeight: 35,
+        alignItems: 'center',
+        justifyContent: 'center',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+        elevation: 3,
       },
     image: {
         width: 200,

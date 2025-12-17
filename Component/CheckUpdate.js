@@ -38,7 +38,7 @@ const CkeckUpdate = () => {
   const checkStoreUpdate = async () => { 
     try {    
       const installedVersion = Constants.expoConfig.version || '0.0.0';
-      console.log("installed version is", installedVersion);   
+      //console.log("installed version is", installedVersion);   
        
       const latestVersion = '1.0.4';
       const appId = Constants.expoConfig.android?.package;

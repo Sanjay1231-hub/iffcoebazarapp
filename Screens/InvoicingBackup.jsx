@@ -4,6 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons'; // Optional: for the Add ico
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
 import AlertWithIcon from '../Component/AlertWithIcon';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Invoicing() {
     const data = new Array(1).fill(null).map((_, index) => `Item ${index}`);
@@ -16,7 +17,7 @@ export default function Invoicing() {
     ]);
     const [customers, setCustomers] = useState([]);
     const [product, setProduct] = useState([]);
-    const [batchReq, setBatchReq] = useState([]);
+    const [filteredProduct, setFilteredProduct] = useState([]);
     const [rate, setRate] = useState([]);
     const [batch, setBatch] = useState([]);
     const [summaryDetail, setSummaryDetail] = useState([]);
@@ -39,8 +40,12 @@ export default function Invoicing() {
     const [paymentMethod, setPaymentMethod] = useState('');
     const [selectedTab, setSelectedTab] = useState(null);
     const [orderId, setOrderId] = useState(null); // State to store orderId
-    const [isLastRow , setIsLastRow ] = useState(null); // State to store orderId
     const [alert, setAlert] = useState({ visible: false, title: "", message: "", type: "" });
+    const [sendWhatsapp, setSendWhatsapp] = useState(false);
+
+    const API_BASE_URL = process.env.API_URL || 'https://ebazarapi.iffco.in/API';
+
+      const navigation = useNavigation();
 
     // Fetch Order ID from API on page load
     const fetchOrderId = async () => {
@@ -52,7 +57,8 @@ export default function Invoicing() {
                 apiId: "34",                
                 inApiParameters: [],
             };
-            const response = await fetch('https://ebazarapi.iffco.in/API', {
+            //const response = await fetch('https://ebazarapi.iffco.in/API', {
+            const response = await fetch(API_BASE_URL, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -178,6 +184,7 @@ export default function Invoicing() {
     };
 
     const fetchProduct = async () => {
+        //console.log("button pressed");
         try {
             const loggedInEmpStore = await AsyncStorage.getItem('officeCode');            
             const postData = {
@@ -192,6 +199,8 @@ export default function Invoicing() {
                     { label: 'P_STATE_CD', value: "" },
                 ],
             };
+
+             //console.log('JSON parse postData:', JSON.stringify(postData));
         
               const response = await fetch('https://ebazarapi.iffco.in/API', {
                 method: 'POST',
@@ -219,6 +228,7 @@ export default function Invoicing() {
         
               if (result?.output && Array.isArray(result.output)) {
                 setProduct(result.output);
+                setFilteredProduct(result.output);
               } else {
                 throw new Error('Unexpected data format received.');
               }
@@ -518,10 +528,8 @@ export default function Invoicing() {
         // Retrieve stored values from AsyncStorage
         const loggedInEmpStore = await AsyncStorage.getItem('officeCode');
         const loggedState = await AsyncStorage.getItem('stateCd');
-
         // Validation function
         const isValid = (value) => value !== null && value !== undefined && value !== '';
-
         let validationFailed = false; // Flag to track validation failure
 
         for (let row of rows) {
@@ -553,7 +561,6 @@ export default function Invoicing() {
                 break; // Exit loop immediately when batch validation fails
             }
         }
-
 
         if (validationFailed) return; // Stop execution if validation failed
 
@@ -612,11 +619,29 @@ export default function Invoicing() {
                 });
                 return;
                 }
-
-                const responseData = result.output;
+                //const responseData = result.output;
+                const outParam = result.output?.OUT_PARAM_1;
           
-                if (responseData?.OUT_PARAM_1) {
-                    setAlert({ visible: true, title: "Success", message: responseData?.OUT_PARAM_1, type: "success" });
+                if (outParam) {                    
+                    const outVal = outParam.toString().trim();
+                    if (/ORA-\d+/i.test(outVal) || outVal.toUpperCase().includes("ERROR")) {
+                        // Oracle error → show warning
+                        setAlert({
+                        visible: true,
+                        title: "Warning",
+                        message: outVal, // remove "Error:" prefix if present
+                        type: "warning",
+                        });
+                    } else {
+                        // Success case
+                        setAlert({
+                        visible: true,
+                        title: "Success",
+                        message: outVal,
+                        type: "success",
+                        });
+                    }
+                    //setAlert({ visible: true, title: "Success", message: responseData?.OUT_PARAM_1, type: "success" });
                     // Reset customer selection
                     setSelectedCname('');
                     setSelectedCustId('');
@@ -643,9 +668,7 @@ export default function Invoicing() {
                 } else {
                 setAlert({ visible: true, title: "Error", message: "Unexpected server response.", type: "error" });
                 }
-
                 //console.log("invoices saved successfully.");
-
                 
             } catch (error) {
                 //console.error('Error saving data:', error);
@@ -700,14 +723,20 @@ export default function Invoicing() {
             VALUE: row.value,
             QTY: row.qty
         }));
+
+        // Calculate totals
+        //const totalQty = summarydata.reduce((sum, item) => sum + item.QTY, 0);
+        //const totalValue = summarydata.reduce((sum, item) => sum + item.VALUE, 0);
         
         // Update the summary data if showList is already true
         if (showList) {
             setSummaryDetail(summarydata); // Update the list when it is already shown
+            //setSummaryTotal(totalValue); // Update the list when it is already shown
         } else {
             // Toggle the showList state to true (if it is false) and set the data
             setShowList(true);
             setSummaryDetail(summarydata);
+             //setSummaryTotal(totalValue); // Update the list when it is already shown
         }
     };
 
@@ -769,7 +798,7 @@ export default function Invoicing() {
     };
     const openPaymentModal = () => {
         setPaymentModalVisible(true);
-		setLoading(false);
+        setLoading(false);
         //summary();
     };
     // Calculate the total value
@@ -812,7 +841,26 @@ export default function Invoicing() {
         } else {
           setFilteredData(customers);
         }
-      };     
+      };    
+      
+        const handlePrdSearch = (query) => {
+        setSearchPrdQuery(query);
+        if (query.trim()) {
+          const filtered = product.filter(item => {
+            // Make sure PRD_DESC is a string and use optional chaining to safely access other fields
+            const custId = item?.PRD_CD ? item.PRD_CD.toString().toLowerCase() : '';
+            const cname = item?.PRD_DESC?.toLowerCase() || '';
+            const phone = item?.BAG_CD?.toLowerCase() || '';
+      
+            return cname.includes(query.toLowerCase()) ||
+                   phone.includes(query.toLowerCase()) ||
+                   custId.includes(query.toLowerCase());
+          });
+          setFilteredProduct(filtered);
+        } else {
+          setFilteredProduct(product);
+        }
+      };  
 
     const selectPayment = (item) => {
         // Validation function
@@ -873,21 +921,29 @@ export default function Invoicing() {
         keyExtractor={(index) => index.toString()}
         renderItem={() => ( 
         <View style={styles.container}>
+             <View style={styles.ODbuttonContainer}>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate('InvoiceHistory')}
+                >
+                <Text style={styles.odText}>Invoice History</Text>
+                </TouchableOpacity>
+            </View>
             <Text style={styles.tabheader}>Product<Text style={styles.asterisk}> *</Text></Text>  
             <TouchableOpacity  onPress={toggleProductTab}>
-                <View style={[styles.inputContainer, {marginBottom: 5}]}>    
-                        <AntDesign name='shoppingcart' size={24} color="#3d89fc" />           
+                <View style={[styles.inputContainer, {marginBottom: 3, paddingRight: 15}]}>    
+                        <AntDesign name='shopping-cart' size={24} color="#3d89fc" />           
                         <TextInput
-                        style={styles.textInput}
-                        placeholder="Select Products"
-                        placeholderTextColor="#545454"
-                        editable={false}
+                            style={styles.textInput}
+                            placeholder="Select Products"
+                            placeholderTextColor="#545454"
+                            editable={false}
+                            allowFontScaling={false}
                         />            
                         <AntDesign name={selectedTab === 'product' ? 'up' : 'down'} size={20} color="#3d89fc" />
                 </View>
             </TouchableOpacity>
 
-        {selectedTab === 'product' && (
+            {selectedTab === 'product' && (
             <>
                
                 {/* Render the rows with inputs */}            
@@ -906,36 +962,39 @@ export default function Invoicing() {
                                     <Ionicons name="search" size={20} color="white" />                                   
                                 </TouchableOpacity>
                                 <TextInput
-                                    //style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
-                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28}]}
+                                    style={[styles.input, { width: '99%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32}]}
                                     placeholder="--Select Product--"
                                     value={item.prdname}
                                     placeholderTextColor="#a3a3a3"
                                     editable={false} // Make the input non-editable, since the product will be selected from modal
+                                     allowFontScaling={false}
                                 />
                                 <TextInput
-                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, display: 'none', }]}
+                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32, display: 'none', }]}
                                     placeholder="--Select Product Code--"
                                     value={item.productcode}
                                     placeholderTextColor="#a3a3a3"
                                     editable={false} // Make the input non-editable, since the product will be selected from modal
+                                     allowFontScaling={false}
                                 />
                                 <TextInput
-                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, display: 'none', }]}
+                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32, display: 'none', }]}
                                     placeholder="--Select Bag Code--"
                                     value={item.bagcode}
                                     placeholderTextColor="#a3a3a3"
                                     editable={false} // Make the input non-editable, since the product will be selected from modal
+                                    allowFontScaling={false}
                                 />
                                 <TextInput
-                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, display: 'none', }]}
+                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32, display: 'none', }]}
                                     placeholder=""
                                     value={item.batchReq}
                                     placeholderTextColor="#a3a3a3"
                                     editable={false} // Make the input non-editable, since the product will be selected from modal
+                                    allowFontScaling={false}
                                 />
                                
-                                <TouchableOpacity onPress={() => removeRow(item.id)} style={[styles.deleteButton, { marginLeft: -28,}]}>
+                                <TouchableOpacity onPress={() => removeRow(item.id)} style={[styles.deleteButton, { marginLeft: -29,}]}>
                                     <View style={styles.deleteContent}>                                    
                                         <Ionicons name="trash-outline" size={18} color="#fff" />
                                     </View>
@@ -954,20 +1013,21 @@ export default function Invoicing() {
                                                 <Text style={styles.modalTitle}>Product LOV</Text>
                                                 <Ionicons name="close" size={24} color="black" onPress={closeModalProd} style={styles.lovclose} />
                                             </View>
-                                             {/* Search Input */}
-                                <View style={styles.prdRow}> 
-                                    <TextInput
-                                        style={[styles.searchInput,{ width: '88%'}]}
-                                        placeholder="Search by Name"
-                                        value={searchPrdQuery}
-                                        onChangeText={handleSearch}
-                                        placeholderTextColor="#a3a3a3"
-                                    />
-                                    <Ionicons name="search" size={22} color="#a3a3a3" style={styles.Searchbtn} />
-                                </View>
+                                            {/* Search Input */}
+                                            <View style={styles.prdRow}> 
+                                                <TextInput
+                                                    style={[styles.searchInput,{ width: '90%'}]}
+                                                    placeholder="Search by Product Name"
+                                                    value={searchPrdQuery}
+                                                    onChangeText={handlePrdSearch}
+                                                    placeholderTextColor="#a3a3a3"
+                                                     allowFontScaling={false}
+                                                />
+                                                <Ionicons name="search" size={22} color="#a3a3a3" style={styles.Searchbtn} />
+                                            </View>
 
                                             <View style={styles.header}>                           
-                                                <Text style={[styles.headerText, { flex: 2.7, textAlign: 'center' }]}>Product Name</Text>
+                                                <Text style={[styles.headerText, { flex: 4, textAlign: 'center' }]}>Product Name</Text>
                                                 <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Prod. Cd.</Text>
                                                 <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Bag Cd.</Text>
                                                 <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Stock</Text>                        
@@ -982,13 +1042,13 @@ export default function Invoicing() {
                                             ) : (
 
                                                     <FlatList
-                                                        data={product}
+                                                        data={filteredProduct}
                                                         //keyExtractor={(item, index) => item.ID ? item.ID.toString() + index.toString() : index.toString()}         
                                                         keyExtractor={(item) => item.PRD_CD.toString()}                    
                                                         renderItem={({ item }) => (
                                                             <TouchableOpacity onPress={() => selectProduct(item, rows[rows.length - 1].id)}>
                                                                 <View style={styles.row}>                                       
-                                                                    <Text style={[styles.cell, { flex: 3, textAlign: 'left' }]}>
+                                                                    <Text style={[styles.cell, { flex: 4.7, textAlign: 'left' }]}>
                                                                     {item.PRD_DESC || 'No Data'}
                                                                     </Text> 
                                                                     <Text style={[styles.cell, { flex: 1, textAlign: 'left' }]}>
@@ -1012,7 +1072,7 @@ export default function Invoicing() {
                                                 )}
 
                                             <View style={styles.footer}>
-                                                <Text style={styles.footerText}>Total Records: {product.length}</Text>
+                                                <Text style={styles.footerText}>Total Records: {filteredProduct.length}</Text>
                                             </View>
                                         </View>
                                     </View>
@@ -1026,20 +1086,21 @@ export default function Invoicing() {
                                     <Ionicons name="search" size={20} color="#fff" />
                                 </TouchableOpacity>
                                 <TextInput
-                                style={[styles.input, { width: '29%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, marginRight: 3 }]}
-                                placeholder=""
-                                value={item.rate}
-                                editable={false}
-                                placeholderTextColor="#a3a3a3"
-
+                                    style={[styles.input, { width: '29%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28, marginRight: 3 }]}
+                                    placeholder=""
+                                    value={item.rate}
+                                    editable={false}
+                                    placeholderTextColor="#a3a3a3"
+                                    allowFontScaling={false}
                                 />
                                 <TextInput
-                                style={[styles.input, { width: '20%', color: '#333', backgroundColor: '#f0f0f0', display: 'none', paddingLeft: 10 }]}
-                                placeholder="--Rate id--"
-                                value={item.rateId}
-                                editable={false}
-                                placeholderTextColor="#a3a3a3"
-                                />                               
+                                    style={[styles.input, { width: '20%', color: '#333', backgroundColor: '#f0f0f0', display: 'none', paddingLeft: 10 }]}
+                                    placeholder="--Rate id--"
+                                    value={item.rateId}
+                                    editable={false}
+                                    placeholderTextColor="#a3a3a3"
+                                    allowFontScaling={false}
+                                    />                               
                                
 
                                 <Modal
@@ -1064,11 +1125,11 @@ export default function Invoicing() {
                                             </View>
                                             {/* Loading Indicator */}
                                             {loading ? (
-                                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                                    <View style={{ transform: [{ scale: 0.6 }] }}>
-          <ActivityIndicator size={50} color="#4a80f5" />
-        </View>
+                                            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                                <View style={{ transform: [{ scale: 0.6 }] }}>
+                                                    <ActivityIndicator size={50} color="#4a80f5" />
                                                 </View>
+                                            </View>
                                             ) : (
 
                                                     <FlatList
@@ -1106,19 +1167,19 @@ export default function Invoicing() {
 
                                 {/* <Text style={styles.label}>Batch:</Text>  */}
                                 <TouchableOpacity 
-                                    style={[styles.buttonLov, item.batchReq === 'N' && { opacity: 0.5 }]} 
+                                    style={[styles.buttonLov, item.batchReq === 'N' && { opacity: 0.5, backgroundColor: '#494949ff' }]} 
                                     onPress={() => openBatchModal(item.productcode, item.bagcode)}
                                     disabled={item.batchReq === 'N' || index !== rows.length - 1}
                                 >
                                     <Ionicons name="search" size={20} color="#fff" />
                                 </TouchableOpacity>
                                 <TextInput
-                                style={[styles.input, { width: '59%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28 }]}
-                                placeholder="--select Batch--"
+                                style={[styles.input, { width: '57%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32 }]}
+                                placeholder="--Select Batch--"
                                 value={item.batch}
                                 editable={false}
                                 placeholderTextColor="#a3a3a3"
-
+                                allowFontScaling={false}
                                 />
                                 
 
@@ -1146,10 +1207,10 @@ export default function Invoicing() {
                                             {loading ? (
                                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                                     <View style={{ transform: [{ scale: 0.6 }] }}>
-          <ActivityIndicator size={50} color="#4a80f5" />
-        </View>
+                                                    <ActivityIndicator size={50} color="#4a80f5" />
                                                 </View>
-                                            ) : (
+                                                </View>
+                                                ) : (
 
                                                     <FlatList
                                                         data={batch}
@@ -1188,23 +1249,39 @@ export default function Invoicing() {
                             </View>
                             <View style={styles.tabInputContainer}>  
                                 <Text style={[styles.label, { paddingRight: 12}]}>Qty:</Text> 
-                                <TextInput
+                                {/* <TextInput
                                 style={[styles.input, { width: '29%', color: '#333', }]}
                                 placeholder="Enter Qty"
                                 value={item.qty}
                                 keyboardType="numeric"
                                 onChangeText={(text) => handleInputChange(text, 'qty', item.id)}
                                 placeholderTextColor="#a3a3a3"
+                                 allowFontScaling={false}
 
-                                />
-                                <Text style={[styles.label, { paddingRight: 4, paddingLeft: 4}]}>Value:</Text> 
+                                /> */}
+
                                 <TextInput
-                                style={[styles.input, { width: '45%', color: '#333', backgroundColor: '#f0f0f0' }]}
-                                placeholder="Net Value"
-                                value={item.value ? item.value.toString() : ''}
-                                placeholderTextColor="#a3a3a3"
-                                editable={false}
+                                    style={[styles.input, { width: '29%', color: '#333' }]}
+                                    placeholder="Enter Qty"
+                                    value={item.qty?.toString() || ""}
+                                    keyboardType="numeric"
+                                    onChangeText={(text) => {
+                                        // Remove non-digits using regex
+                                        const intValue = text.replace(/[^0-9]/g, '');
+                                        handleInputChange(intValue, 'qty', item.id);
+                                    }}
+                                    placeholderTextColor="#a3a3a3"
+                                     allowFontScaling={false}
+                                    />
 
+                                <Text style={[styles.label, { paddingRight: 5, paddingLeft: 5}]}>Value:</Text> 
+                                <TextInput
+                                    style={[styles.input, { width: '47%', color: '#333', backgroundColor: '#f0f0f0' }]}
+                                    placeholder="Net Value"
+                                    value={item.value ? item.value.toString() : ''}
+                                    placeholderTextColor="#a3a3a3"
+                                    editable={false}
+                                    allowFontScaling={false}
                                 />
                                 
                             </View>                            
@@ -1215,18 +1292,18 @@ export default function Invoicing() {
                     )}
                     showsVerticalScrollIndicator={true}
                 />
-                {/* Total Value */}
+          
                
                     
-                    <View style={styles.totalContainer}>
-                        <TouchableOpacity onPress={addRow} style={styles.addNewRow}>  
-                            <Text style={{ color: '#333', fontWeight: '500'}}>Add Product</Text>                  
-                            <MaterialIcons name="add" size={20} color="#333" />
-                        </TouchableOpacity>
-                        {rows.length > 0 && (
-                        <Text style={styles.totalText}>Total Amount: {calculateTotalValue()}</Text>
-                    )}
-                    </View>
+                <View style={styles.totalContainer}>
+                    <TouchableOpacity onPress={addRow} style={styles.addNewRow}>  
+                        <Text style={{ color: '#333', fontWeight: '500'}}>Add Product</Text>                  
+                        <MaterialIcons name="add" size={20} color="#333" />
+                    </TouchableOpacity>
+                    {rows.length > 0 && (
+                    <Text style={styles.totalText}>Total Amount: {calculateTotalValue()}</Text>
+                )}
+                </View>
                
             </>
             
@@ -1234,13 +1311,14 @@ export default function Invoicing() {
 
         <Text style={[styles.tabheader,{marginTop: 10,}]}>Customer<Text style={styles.asterisk}> *</Text></Text> 
         <TouchableOpacity onPress={toggleCustomerTab}>
-            <View style={[styles.inputContainer, {marginBottom: 5}]}>               
+            <View style={[styles.inputContainer, {marginBottom: 3, paddingRight: 15}]}>               
                 <AntDesign name='user' size={24} color="#3d89fc" />                
                 <TextInput
                 style={styles.textInput}
                 placeholder="Select Customer"
                  placeholderTextColor="#545454"
                 editable={false}
+                 allowFontScaling={false}
                 />            
                 <AntDesign name={selectedTab === 'customer' ? 'up' : 'down'} size={20} color="#3d89fc" />   
             </View>
@@ -1254,11 +1332,12 @@ export default function Invoicing() {
                         <Ionicons name="search" size={20} color="white" />
                     </TouchableOpacity>
                     <TextInput
-                        style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28}]}
+                        style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -34}]}
                         placeholder="--Select Customer--"
                         value={selectedCname}
                         editable={false}
                         placeholderTextColor="#a3a3a3"
+                         allowFontScaling={false}
                     />                
                     
 
@@ -1283,6 +1362,7 @@ export default function Invoicing() {
                                         value={searchQuery}
                                         onChangeText={handleSearch}
                                         placeholderTextColor="#a3a3a3"
+                                         allowFontScaling={false}
                                     />
                                     <Ionicons name="search" size={22} color="#a3a3a3" style={styles.Searchbtn} />
                                 </View>
@@ -1323,35 +1403,38 @@ export default function Invoicing() {
                 </View>
 
                
-                    <View style={{marginHorizontal: 6}}>
-                        <View style={styles.Custrow}>
-                            <Text style={[styles.label, { marginRight: 0}]}>ID:</Text>
-                            <TextInput
-                                style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
-                                value={selectedCustId}
-                                editable={false}
-                            />
-                        </View>
-                        {/* Phone Row */}
-                        <View style={styles.Custrow}>
-                            <Text style={[styles.label, { marginRight: 0}]}>Phone:</Text>
-                            <TextInput
-                                style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
-                                value={selectedCustPhone}
-                                editable={false}
-                            />
-                        </View>
-
-                                            {/* State Row */}
-                        <View style={styles.Custrow}>
-                            <Text style={[styles.label, { marginRight: 0}]}>State:</Text>
-                            <TextInput
-                                style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
-                                value={selectedCustState}
-                                editable={false}
-                            />
-                        </View>              
+                <View style={{marginHorizontal: 0}}>
+                    <View style={styles.Custrow}>
+                        <Text style={[styles.label, { marginRight: 40}]}>ID:</Text>
+                        <TextInput
+                            style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
+                            value={selectedCustId}
+                            editable={false}
+                             allowFontScaling={false}
+                        />
                     </View>
+                    {/* Phone Row */}
+                    <View style={styles.Custrow}>
+                        <Text style={[styles.label, { marginRight: 11}]}>Phone:</Text>
+                        <TextInput
+                            style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
+                            value={selectedCustPhone}
+                            editable={false}
+                             allowFontScaling={false}
+                        />
+                    </View>
+
+                                        {/* State Row */}
+                    <View style={styles.Custrow}>
+                        <Text style={[styles.label, { marginRight: 20}]}>State:</Text>
+                        <TextInput
+                            style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
+                            value={selectedCustState}
+                            editable={false}
+                             allowFontScaling={false}
+                        />
+                    </View>              
+                </View>
                
             </View>
         )}
@@ -1360,13 +1443,14 @@ export default function Invoicing() {
 
         <Text style={[styles.tabheader,{marginTop: 10}]}>Payment<Text style={styles.asterisk}> *</Text></Text>  
         <TouchableOpacity onPress={togglePaymentTab}>
-            <View style={[styles.inputContainer, {marginBottom: 5}]}>            
+            <View style={[styles.inputContainer, {marginBottom: 3, paddingRight: 15}]}>            
                 <AntDesign name='wallet' size={24} color="#3d89fc" />                
                 <TextInput
                 style={styles.textInput}
                 placeholder="Payment Method"
                 placeholderTextColor="#545454"
                 editable={false}
+                 allowFontScaling={false}
                 />            
                 <AntDesign name={selectedTab === 'payment' ? 'up' : 'down'} size={20} color="#3d89fc" />   
             </View>
@@ -1379,11 +1463,12 @@ export default function Invoicing() {
                         <Ionicons name="search" size={20} color="white" />
                     </TouchableOpacity>
                     <TextInput
-                        style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28}]}
+                        style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -34}]}
                         placeholder="--Select Payment Method--"
                         value={paymentMethod}
                         editable={false}
                         placeholderTextColor="#a3a3a3"
+                         allowFontScaling={false}
                     />                
                    
 
@@ -1448,7 +1533,7 @@ export default function Invoicing() {
                     <View style={styles.summaryheader}>
                         <Text style={[styles.summarytab, { width: '75%'}]}>Summary</Text>  
                         <TouchableOpacity style={styles.summarybtn} onPress={summary}>   
-                            <AntDesign name='reload1' size={20} color="#ede213" />      
+                            <AntDesign name='reload' size={20} color="#ede213" />      
                             <Text style={{ paddingHorizontal: 5, color: '#ede213'}}>Reload</Text>
                         </TouchableOpacity>
                     </View>
@@ -1463,24 +1548,54 @@ export default function Invoicing() {
                         data={summaryDetail}
                         keyExtractor={(item, index) => `${item.PRD_CD}-${index}`} // Combine PRD_CD and index for uniqueness
                         renderItem={({ item, index }) => (
-                        <View style={{ flexDirection: 'row', paddingVertical: 3, paddingHorizontal: 4 }}>
+                            <View style={{ flexDirection: 'row', paddingVertical: 3, paddingHorizontal: 4 }}>
                             <Text style={{ flex: 0.5, textAlign: 'center' }}>
-                                {index + 1}  {/* Add 1 to index for serial numbering */}
+                                {index + 1} {/* Add 1 to index for serial numbering */}
                             </Text>
                             <Text style={{ flex: 3, textAlign: 'left' }}>
-                            {item.PRD_DESC || 'No Data'}
+                                {item.PRD_DESC || 'No Data'}
                             </Text>
                             <Text style={{ flex: 1, textAlign: 'right' }}>
-                            {item.QTY || 'No Data'}
+                                {item.QTY || 'No Data'}
                             </Text>
                             <Text style={{ flex: 1.5, textAlign: 'right' }}>
-                            {item.VALUE || 'No Data'}
+                                {item.VALUE || 'No Data'}
                             </Text>
-                        </View>
+                            </View>
                         )}
                         showsVerticalScrollIndicator={true}
                         style={{ borderBottomWidth: 1, borderColor: '#ccc'}}
-                    />
+                        
+                        // 👇 Footer for Total VALUE
+                        ListFooterComponent={() => {
+                            const totalValue = summaryDetail.reduce(
+                            (sum, item) => sum + (parseFloat(item.VALUE) || 0),
+                            0
+                            );
+
+                            return (
+                            <View
+                                style={{
+                                flexDirection: 'row',
+                                paddingVertical: 8,
+                                paddingHorizontal: 4,
+                                borderTopWidth: 1,
+                                borderColor: '#ccc',
+                                marginTop: 6,
+                                }}
+                            >
+                                <Text style={{ flex: 4.5, textAlign: 'right', fontWeight: 'bold' }}>
+                                Total:
+                                </Text>
+                                <Text style={{ flex: 1.5, textAlign: 'right', fontWeight: 'bold' }}>
+                                {totalValue.toFixed(2)}
+                                </Text>
+                            </View>
+                            );
+                        }}
+                        />
+
+                      
                     <View style={{ flexDirection: 'row', marginTop: 10 }}>
                         <Text style={{ flex: 1,fontSize: 15}}>Customer Name: </Text>
                         <Text style={{ flex: 2,fontSize: 15}}>{selectedCname}</Text>
@@ -1504,11 +1619,11 @@ export default function Invoicing() {
         onClose={() => setAlert({ ...alert, visible: false })}
       />
 
-                        </View>
+    </View>
         
     )}
     showsVerticalScrollIndicator={true}
-/>
+    />
   );
 }
 
@@ -1519,15 +1634,17 @@ const styles = StyleSheet.create({
         paddingVertical: 5,
         backgroundColor: '#fff',
     },
-    inputContainer: {
+    inputContainer: {      
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
+        alignItems: 'center', // centers everything vertically
+        justifyContent: 'space-between',
         borderColor: '#ccc',
         borderWidth: 1,
-        paddingHorizontal: 10,   
-        borderRadius: 4,
+        paddingHorizontal: 10,
+        borderRadius: 6,
         backgroundColor: '#fff',
+        minHeight: 45, // set a consistent container height
+        lineHeight: 22,
     },
     summaryheader: {
         flexDirection: 'row',
@@ -1606,10 +1723,7 @@ const styles = StyleSheet.create({
     label: {
         fontSize: 15,
         letterSpacing: 0.3,
-        paddingVertical: 4,
-        //paddingHorizontal: 6,
-        //marginBottom: 5,
-        //alignItems: 'center',
+        paddingVertical: 4,       
         justifyContent: 'center',
         color: '#333',
         fontWeight: '400',
@@ -1621,13 +1735,18 @@ const styles = StyleSheet.create({
         letterSpacing: 0.3,
     },
     input: {
-        height: 30,
-        color: '#333',
-        borderColor: '#ccc',
+        fontSize: 15,
+        lineHeight: 20,            // ensures text fits inside input
+        minHeight: 35,             // use minHeight instead of fixed height
+        letterSpacing: 0.3,
         borderWidth: 1,
+        borderColor: "#ccc",
         borderRadius: 4,
-        paddingLeft: 8,
-        marginBottom: 2,
+        paddingHorizontal: 8,
+        paddingVertical: 6,        // vertical breathing space for text
+        color: '#333',
+        backgroundColor: "#ffffff",
+        textAlignVertical: 'center', // Android vertical alignment
     },   
     modalContent: {
         backgroundColor: '#fff',
@@ -1644,7 +1763,7 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ccc',
     },
     searchInput: {
-        height: 33,
+        height: 37,
         fontSize: 15,
         letterSpacing: 0.3,
         color: '#333',
@@ -1672,34 +1791,32 @@ const styles = StyleSheet.create({
         borderRadius: 4,
     },   
     textInput: {
+        flex: 1, // allow it to expand between icons
         fontSize: 16,
-        letterSpacing: 0.3,
         color: '#000',
-        borderRadius: 4,
-        paddingHorizontal: 10,
-        height: 30,
-        width: '90%',
+        paddingVertical: 0, // prevent extra height from internal padding
+        paddingHorizontal: 8,
+        textAlignVertical: 'center', // ✅ ensures vertical centering on Android
         fontFamily: 'sans-serif',
         },
     buttonLov: {
-        height: 30,
+        minHeight: 35,
+        width: 35,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: '#208cf3',
-        //backgroundColor: '#4290f5',
         borderRadius: 4,
         paddingHorizontal: 4,
-        marginBottom: 2,
         zIndex: 1,
     },
     disabledButton: {
         backgroundColor: "#cccccc", // Gray color for disabled state
       },
-    tabInputContainer: {
+    tabInputContainer: {      
         flexDirection: 'row',
-        alignItems: 'right',
-        justifyContent: 'right',
-        paddingHorizontal: 5,
+        alignItems: 'center', // centers everything vertically
+        justifyContent: 'left',      
+        marginBottom: 3, 
         
     },
     modalContainer: {
@@ -1809,10 +1926,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         //backgroundColor: '#c7c7c7',
         backgroundColor: '#f55105',
-        padding: 5,
-        borderWidth: 1,
-        borderColor: '#f55105',
-        height: 30,
+        paddingHorizontal: 5,
+        //borderWidth: 1,
+        //borderColor: '#f55105',
+        minHeight: 35,
         borderRadius: 4,
     },
     deleteContent: {
@@ -1897,4 +2014,18 @@ const styles = StyleSheet.create({
         //borderRightWidth: 1,
         //borderColor: '#ccc',
       },
+      ODbuttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        
+    },
+    odText: {
+        color: '#0000ff',                // Blue text
+        textDecorationLine: 'underline', // Underlined
+        fontSize: 16,                     // Font size
+        fontWeight: '400',                // Normal weight
+        letterSpacing: 0.3,               // Slight spacing between letters
+        marginBottom: 5,                  // Space below the text
+        lineHeight: 20,  
+    },
 });

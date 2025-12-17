@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, Modal, FlatList, ActivityIndicator, Alert } from 'react-native';
+import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, Modal, FlatList, ActivityIndicator, Alert, Linking } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons'; // Optional: for the Add icon
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Ionicons, AntDesign } from '@expo/vector-icons';
@@ -41,6 +41,7 @@ export default function Invoicing() {
     const [selectedTab, setSelectedTab] = useState(null);
     const [orderId, setOrderId] = useState(null); // State to store orderId
     const [alert, setAlert] = useState({ visible: false, title: "", message: "", type: "" });
+    const [sendWhatsapp, setSendWhatsapp] = useState(false);
 
     const API_BASE_URL = process.env.API_URL || 'https://ebazarapi.iffco.in/API';
 
@@ -673,8 +674,34 @@ export default function Invoicing() {
                 //console.error('Error saving data:', error);
                 setAlert({ visible: true, title: "Error", message: `There was an error saving a invoices: ${error.message}`, type: "error" });
             }
-        }        
+        }      
+        
+        // 2️⃣ Call WhatsApp API ONLY if checked
+        if (sendWhatsapp) {
+            await sendWhatsappInvoice();
+        }
     };
+
+    const sendWhatsappInvoice = async () => {
+        const url ='https://ebazar.iffco.coop/api/job/SendInvoices?invoiceType=B2C%20INVOICE&sendFlag=Y';
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+        });
+
+        const text = await response.text();
+        //console.log("Response from whatsapp api", text);
+
+        if (!response.ok) {
+            throw new Error(text || 'Failed to send WhatsApp invoice');
+        }
+
+        return text;
+    };
+
+
 
     const summary = async () => {
         // Collect all rows data into an array
@@ -930,7 +957,7 @@ export default function Invoicing() {
             <Text style={styles.tabheader}>Product<Text style={styles.asterisk}> *</Text></Text>  
             <TouchableOpacity  onPress={toggleProductTab}>
                 <View style={[styles.inputContainer, {marginBottom: 3, paddingRight: 15}]}>    
-                        <AntDesign name='shopping-cart' size={24} color="#3d89fc" />           
+                        <AntDesign name='shopping-cart' size={24} color="#319bffff" />           
                         <TextInput
                             style={styles.textInput}
                             placeholder="Select Products"
@@ -938,7 +965,7 @@ export default function Invoicing() {
                             editable={false}
                             allowFontScaling={false}
                         />            
-                        <AntDesign name={selectedTab === 'product' ? 'up' : 'down'} size={20} color="#3d89fc" />
+                        <AntDesign name={selectedTab === 'product' ? 'up' : 'down'} size={20} color="#319bffff" />
                 </View>
             </TouchableOpacity>
 
@@ -1311,7 +1338,7 @@ export default function Invoicing() {
         <Text style={[styles.tabheader,{marginTop: 10,}]}>Customer<Text style={styles.asterisk}> *</Text></Text> 
         <TouchableOpacity onPress={toggleCustomerTab}>
             <View style={[styles.inputContainer, {marginBottom: 3, paddingRight: 15}]}>               
-                <AntDesign name='user' size={24} color="#3d89fc" />                
+                <AntDesign name='user' size={24} color="#319bffff" />                
                 <TextInput
                 style={styles.textInput}
                 placeholder="Select Customer"
@@ -1319,7 +1346,7 @@ export default function Invoicing() {
                 editable={false}
                  allowFontScaling={false}
                 />            
-                <AntDesign name={selectedTab === 'customer' ? 'up' : 'down'} size={20} color="#3d89fc" />   
+                <AntDesign name={selectedTab === 'customer' ? 'up' : 'down'} size={20} color="#319bffff" />   
             </View>
         </TouchableOpacity>
 
@@ -1443,7 +1470,7 @@ export default function Invoicing() {
         <Text style={[styles.tabheader,{marginTop: 10}]}>Payment<Text style={styles.asterisk}> *</Text></Text>  
         <TouchableOpacity onPress={togglePaymentTab}>
             <View style={[styles.inputContainer, {marginBottom: 3, paddingRight: 15}]}>            
-                <AntDesign name='wallet' size={24} color="#3d89fc" />                
+                <AntDesign name='wallet' size={24} color="#319bffff" />                
                 <TextInput
                 style={styles.textInput}
                 placeholder="Payment Method"
@@ -1451,7 +1478,7 @@ export default function Invoicing() {
                 editable={false}
                  allowFontScaling={false}
                 />            
-                <AntDesign name={selectedTab === 'payment' ? 'up' : 'down'} size={20} color="#3d89fc" />   
+                <AntDesign name={selectedTab === 'payment' ? 'up' : 'down'} size={20} color="#319bffff" />   
             </View>
         </TouchableOpacity>
 
@@ -1605,6 +1632,18 @@ export default function Invoicing() {
                     </View>
                 </View>
             )}
+
+        <TouchableOpacity
+            style={styles.checkboxRow}
+            onPress={() => setSendWhatsapp(!sendWhatsapp)}
+            >
+            <View style={[styles.checkbox, sendWhatsapp && styles.checkboxChecked]}>
+                {sendWhatsapp && <Text style={styles.checkMark}>✓</Text>}
+            </View>
+
+            <Text style={styles.checkboxLabel}>Send invoice on WhatsApp (Yes/No)</Text>
+        </TouchableOpacity>
+
                    
         <TouchableOpacity style={styles.saveButton} onPress={handleSubmit}>       
             <Text style={styles.saveButtonText}>Save Invoice</Text>
@@ -1688,7 +1727,7 @@ const styles = StyleSheet.create({
         width: '100%',       
         paddingVertical: 3,        
         paddingHorizontal: 6,       
-        backgroundColor: '#208cf3',       
+        backgroundColor: '#319bffff',       
         color: '#fff',
         // Shadow for iOS
         shadowColor: '#000', // Color of the shadow
@@ -1966,25 +2005,16 @@ const styles = StyleSheet.create({
         fontFamily: 'sans-serif',
         letterSpacing: 0.3,
     },
-    totalContainer: {
-        //marginTop: 20,
-        //padding: 3,
-        flexDirection: 'row',
-        //paddingHorizontal: 10,
-        //paddingVertical: 4,
-        justifyContent: 'space-between',
-        //borderTopWidth: 1,
-        borderTopColor: '#ccc',
-        //backgroundColor: '#797b85',
+    totalContainer: {        
+        flexDirection: 'row',        
+        justifyContent: 'space-between',        
+        borderTopColor: '#ccc',       
         width: '100%',
     },
     totalText: {
         fontWeight: '400',
         fontSize: 15,
-        letterSpacing: 0.3,
-        //fontFamily: 'Lato',
-        //fontFamily: 'Futura',
-        //fontFamily: 'sans-serif',
+        letterSpacing: 0.3,        
         width: '64%',
         textAlign: 'center',
         color: '#fff',
@@ -2026,5 +2056,40 @@ const styles = StyleSheet.create({
         letterSpacing: 0.3,               // Slight spacing between letters
         marginBottom: 5,                  // Space below the text
         lineHeight: 20,  
+    },
+    checkboxRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginVertical: 10,
+        padding: 10,
+        backgroundColor: '#def7b0ff',        
+        borderRadius: 5,
+    },
+
+    checkbox: {
+        width: 20,
+        height: 20,
+        borderWidth: 1,
+        borderColor: '#555',
+        backgroundColor: '#ffffffff',  
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 8,
+    },
+
+    checkboxChecked: {
+        backgroundColor: '#25D366',
+        borderColor: '#25D366',
+    },
+
+    checkMark: {
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+
+    checkboxLabel: {
+        fontSize: 14,
+        letterSpacing: 0.3,
+        color: '#333',
     },
 });

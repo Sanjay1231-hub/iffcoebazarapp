@@ -149,7 +149,6 @@ const LoginPage = ({ onLogin }) => {
         await AsyncStorage.setItem('userType', selectedValue);
         onLogin();
 
-        fetchUserImage(); // fetching user image
       } else {
         setAlert({ visible: true, title: "Invalid Credentials", message: "The username or password you entered is incorrect.", type: "warning" });
       }
@@ -449,8 +448,7 @@ const LoginPage = ({ onLogin }) => {
     } finally {
       setPwdLoading(false);
     }
-  };
-    
+  };    
 
 
   if (checkingSession) {
@@ -461,76 +459,6 @@ const LoginPage = ({ onLogin }) => {
       </View>
     );
   }
-  
-  // const fetchUserImage = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     const [PersonalNo] = await Promise.all([
-  //       AsyncStorage.getItem('empPno')
-  //     ]);
-  //     //console.log("loged user is", PersonalNo)
-
-  //     if (!PersonalNo ) {
-  //       throw new Error('Missing required user information');
-  //     }
-
-  //     const postData = {
-  //       token: 'IEBL0001',
-  //       apiId: '4',
-  //       inApiParameters: [
-  //         {
-  //           label: 'P_PERSONAL_NO',
-  //           value: String(PersonalNo),
-  //         },
-  //       ],
-  //     };
-
-  //     const response = await fetch('https://ebazarapi.iffco.in/API', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Accept': 'application/json',
-  //         'User-Agent': 'ReactNativeApp/1.0',
-  //       },
-  //       body: JSON.stringify(postData),
-  //     });
-
-  //     const rawText = await response.text();
-
-  //     if (!response.ok) {
-  //       throw new Error(`API Error (${response.status})`);
-  //     }
-
-  //     let json;
-  //     try {
-  //       json = JSON.parse(rawText);
-  //     } catch {
-  //       throw new Error('Invalid JSON received from server');
-  //     }
-
-  //     const userData = json?.output?.[0];
-
-  //     if (userData?.EMP_PHOTO) {
-  //       //await AsyncStorage.setItem('empPhoto', String(userData.EMP_PHOTO));
-  //       setImageUrl(userData.EMP_PHOTO);
-  //     } else {
-  //       //await AsyncStorage.removeItem('empPhoto'); // ✅ correct
-  //        setImageUrl(null);
-  //     }
-
-  //     return userData?.EMP_PHOTO || null;
-  //   } catch (err) {
-  //     console.error('fetchUserImage error:', err);
-  //     Alert.alert('Image Load Failed', err.message);
-  //     return null;
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-
-
 
   return (
 

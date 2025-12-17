@@ -207,7 +207,7 @@ useEffect(() => {
           {/* Sidebar */}
           <Animated.View style={[styles.sidebar, { transform: [{ translateX: slideAnim }] }]}>
             <TouchableOpacity onPress={closeSidebar} style={styles.closeButton}>
-              {/* <AntDesign name="arrow-left" size={20} color="#333" /> */}
+              <AntDesign name="arrow-left" size={20} color="#333" />
             </TouchableOpacity>
             <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
                 {loading ? (
@@ -373,9 +373,7 @@ const styles = StyleSheet.create({
   /* Sidebar Styles */
   fullScreenContainer: {
     flex: 1,
-     flexDirection: 'row',
-    //justifyContent: 'flex-start',
-    //alignItems: 'flex-start',
+    flexDirection: 'row',
   },  
   overlay: {
     position: 'absolute',
@@ -384,13 +382,14 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     backgroundColor: 'rgba(0,0,0,0.3)',
-    //zIndex: 1,
+    zIndex: 1,
   },  
   sidebar: {
     width: '80%',
     height: '100%',
     //backgroundColor: '#fff',
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    paddingTop: 30,
     padding: 10,
     position: 'absolute',
     left: 0,
@@ -398,13 +397,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: -2, height: 0 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    elevation: 10,
+    elevation: 5,
     zIndex: 2,
   },  
   closeButton: {
-    alignSelf: 'flex-end',
-    minHeight: 30,
     padding: 12,
+    alignSelf: 'flex-end',
   },
   sidebarTitle: {
     fontSize: 16,

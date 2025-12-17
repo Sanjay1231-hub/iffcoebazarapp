@@ -924,7 +924,7 @@ const styles = StyleSheet.create({
   },
 
   buttonLov: {
-    minHeight: 40,
+    height: 40,
     width: 35,
     justifyContent: 'center',
     alignItems: 'center',
@@ -935,7 +935,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    minHeight: 40,
+    height: 40,
     flex: 1,
     fontSize: 15,
     color: '#333',

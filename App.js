@@ -273,7 +273,7 @@ useEffect(() => {
       if (!response.ok) throw new Error(`Server returned: ${response.status}`);
 
       await AsyncStorage.setItem(TOKEN_STORAGE_KEY, token);
-       Alert.alert("Token successfully saved.", token);
+       //Alert.alert("Token successfully saved.", token);
       //console.log('Token successfully saved:', token);
     } catch (error) {
       //console.log('Error saving token:', error);

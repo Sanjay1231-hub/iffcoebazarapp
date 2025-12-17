@@ -7,13 +7,13 @@ const AlertWithIcon = ({ visible, title, message, type = "error", onClose }) => 
   const getAlertConfig = () => {
     switch (type) {
       case "success":
-        return { icon: "checkmark-circle-outline", color: "#26c221" }; // Green for success
+        return { icon: "checkmark-circle-outline", color: "#28a745" }; // Green for success
       case "warning":
-        return { icon: "warning-outline", color: "#fcac00ff" }; // Yellow for warning
+        return { icon: "warning-outline", color: "#ffc107" }; // Yellow for warning
       case "error":
-        return { icon: "close-circle-outline", color: "#f5531d" }; // Red for error
+        return { icon: "close-circle-outline", color: "#dc3545" }; // Red for error
       default:
-        return { icon: "information-circle-outline", color: "#007bff" }; // Default to blue info icon
+        return { icon: "information-circle-outline", color: "#17a2b8" }; // Default to blue info icon
     }
   };
   
@@ -63,14 +63,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     overflow: 'hidden',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 5,
-    elevation: 5,
+    elevation: 10,
   },
   modalTitleBar: {
     width: '100%',
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 16,
     justifyContent: 'center',
     alignItems: 'center',
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   modalTitleText: {
     fontSize: 18,
     letterSpacing: 0.3,
-    fontWeight: 'bold',
+    fontWeight: '500',
     color: '#fff',
   },
   modalIcon: {
@@ -87,14 +87,14 @@ const styles = StyleSheet.create({
   modalMessage: {
     fontSize: 15,
     color: '#333',
-    letterSpacing: 0.3,
+    letterSpacing: 0.2,
     textAlign: 'center',
-    marginVertical: 10,
+    //marginVertical: 10,
     paddingHorizontal: 16,
   },
   okButton: {
     marginTop: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 6,
   },

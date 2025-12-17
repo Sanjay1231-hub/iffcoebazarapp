@@ -63,16 +63,16 @@ const PartyLedgerReport = () => {
     try {
       setIsDownloading(true);
       const fscOffice = await AsyncStorage.getItem('officeCode');
-      console.log("from date",formatDate(fromDate, false));
+      //console.log("from date",formatDate(fromDate, false));
 
       const pdfUrl = `https://ebazar.iffco.coop/BazarSoftRDLC/bazarsoftreport/PARTY_LEDGERNEW.aspx?P_FROM_DATE=${formatDate(fromDate, false)}&P_TO_DATE=${formatDate(toDate, false)}&P_PARTY_CD=${fscOffice}&P_ORG_CD=%&Report_Type=PDF_APP&ENCRYPTED=false`;
 
-      console.log("Report URL:", pdfUrl);
+      //console.log("Report URL:", pdfUrl);
 
       await Linking.openURL(pdfUrl);
 
     } catch (error) {
-      console.log("PDF Download Error:", error);
+      //console.log("PDF Download Error:", error);
       showAlert("Error", "Unable to download your report. Please try again.", "error");
     } finally {
       setIsDownloading(false);

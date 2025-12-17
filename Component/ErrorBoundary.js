@@ -12,7 +12,7 @@ class ErrorBoundary extends React.Component {
   }
 
   componentDidCatch(error, info) {
-    console.log("App crashed: ", error, info);
+    //console.log("App crashed: ", error, info);
   }
 
   render() {
