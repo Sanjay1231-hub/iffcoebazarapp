@@ -40,7 +40,9 @@ const LeaveApplyDayPicker = ({ selectedValue = '', onValueChange = () => {} }) =
         <Text style={styles.pickerText}>
           {options.find(option => option.value === selectedValue)?.label || '--Select--'}
         </Text>
-        <Ionicons name="chevron-down" size={20} color="#5f5f5fff" />
+         <View style={styles.iconContainer}>
+                              <Ionicons name="chevron-down" size={18} color="#ffffff" />
+                            </View>
       </TouchableOpacity>
 
       <Modal
@@ -87,7 +89,6 @@ const LeaveApplyDayPicker = ({ selectedValue = '', onValueChange = () => {} }) =
 const styles = StyleSheet.create({
   pickerButton: {
     paddingHorizontal: 10,
-    paddingVertical: 5,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
@@ -96,6 +97,16 @@ const styles = StyleSheet.create({
   pickerText: {
     fontSize: 15,
     letterSpacing: 0.3,
+  },
+   iconContainer: {
+    width: 35,
+    height: 35,
+    borderTopRightRadius: 5,        // circle
+    borderBottomRightRadius: 5,        // circle
+    backgroundColor: '#007BFF', // your theme color
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: -10,
   },
   modalContainer: {
     flex: 1,

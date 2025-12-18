@@ -38,7 +38,10 @@ const CustomerIdProofType = ({ selectedValue = '', onValueChange = () => {} }) =
            <Text style={styles.pickerText}>
              {options.find(option => option.value === selectedValue)?.label || '--Select--'}
            </Text>
-           <Ionicons name="chevron-down" size={20} color="#5f5f5fff" />
+           {/* <Ionicons name="chevron-down" size={20} color="#5f5f5fff" /> */}
+            <View style={styles.iconContainer}>
+              <Ionicons name="chevron-down" size={18} color="#ffffff" />
+            </View>
          </TouchableOpacity>
    
          <Modal
@@ -87,22 +90,32 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 40,
     fontSize: 15,
-    paddingHorizontal: 8,
-    paddingVertical: 5,
+    paddingHorizontal: 10,
+    //paddingVertical: 5,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    backgroundColor: '#fff',
+    backgroundColor: '#ffffffff',
   },
   pickerText: {
     fontSize: 15,
     letterSpacing: 0.3,
   },
+  iconContainer: {
+  width: 35,
+  height: 40,
+  borderTopRightRadius: 5,        // circle
+  borderBottomRightRadius: 5,        // circle
+  backgroundColor: '#007BFF', // your theme color
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: -10,
+},
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
   },
   modalContent: {
     width: 300,

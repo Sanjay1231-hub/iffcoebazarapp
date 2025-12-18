@@ -246,7 +246,13 @@ function Home() {
             <HomeButton onPress={() => navigateToScreen("StoreMaster")}  title="StoreMaster" icon="server-outline">    
             </HomeButton>
             <Text style={styles.buttonText}>Master</Text>
-          </View>  
+          </View> 
+
+          {/* <View style={styles.containerbutton}>
+            <HomeButton onPress={() => navigateToScreen("CashDepositApproval")}  title="CashDepositApproval" icon="server-outline">    
+            </HomeButton>
+            <Text style={styles.buttonText}>Cash Approval</Text>
+          </View>   */}
 
 
                

@@ -40,6 +40,7 @@ import FarmerMeetingTarget from './Screens/FarmerMeetingTarget';
 import InvoiceHistory from './Screens/InvoiceHistory';
 import IndentScreen from './Screens/IndentScreen';
 import PartyLedgerReport from './Screens/Franchise/PartyLedgerReport';
+import CashDepositApproval from './Screens/BazarSoft/CashDepositApproval';
 
 
 const Stack = createStackNavigator();
@@ -142,6 +143,7 @@ const AppNavigator = ({ onLogout, userType }) => {
         <Stack.Screen name="InvoiceHistory" component={InvoiceHistory} options={{ title: 'Invoice History' }} />  
         <Stack.Screen name="IndentScreen" component={IndentScreen} options={{ title: 'Indent' }} />  
         <Stack.Screen name="PartyLedgerReport" component={PartyLedgerReport} options={{ title: 'Party Ledger Report' }} />  
+        <Stack.Screen name="CashDepositApproval" component={CashDepositApproval} options={{ title: 'Cash Deposit Approval' }} />  
 
       </Stack.Navigator>
     </NavigationContainer>

@@ -223,7 +223,7 @@ return (
       </View>
      
 
-      {Platform.OS === 'web' ? (
+      {/* {Platform.OS === 'web' ? (
       <input
         type="date"
         onChange={(e) => {
@@ -245,7 +245,20 @@ return (
         display="default"
         onChange={handleDateChange}
       />
-    )}
+    )} */}
+
+    <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.dateButton}>
+        <Text style={styles.dateText}>{formatDate(selectedDate)}</Text>
+      </TouchableOpacity>
+    
+      {showDatePicker && (
+        <DateTimePicker
+          value={selectedDate || new Date()}
+          mode="date"
+          display="default"
+          onChange={handleDateChange}
+        />
+      )}
 
       <View style={styles.table}>
         <View style={styles.row}>
@@ -261,10 +274,10 @@ return (
               </View>
             ) : (
                 message ? (
-                    <View style={[styles.row, { height: 60, justifyContent: 'center' }]}>
+                    <View style={[styles.row, { height: 60, justifyContent: 'center', padding: 10 }]}>
                       <Text>{message}</Text> 
                     </View>// Display the message if no data
-                ) : <View style={[styles.row, { height: 60 }]}>
+                ) : <View style={[styles.row, { height: 60, justifyContent: 'center', padding: 10 }]}>
                       <Text>{message}</Text> 
                     </View> // If no message, render nothing
             )}
@@ -470,6 +483,7 @@ const styles = StyleSheet.create({
     borderColor: '#ddd',
     borderRadius: 5,
     marginBottom: 10,
+     backgroundColor: '#e7f5ffff',
   },
   row: {
     flexDirection: 'row',

@@ -268,7 +268,7 @@ const openPdfNew = async () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.section}>
+     
         <Text style={styles.label}>Select YearMonth<Text style={styles.asterisk}>*</Text></Text>
           <View style={styles.modalcontainerInput}>
               <TouchableOpacity style={styles.buttonLov} onPress={() => setModalVisible(true)}>
@@ -297,8 +297,7 @@ const openPdfNew = async () => {
                       </View>
 
                       <View style={styles.header}>                           
-                          <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>YEAR MONTH</Text>
-                          
+                          <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>YEAR MONTH</Text>                          
                       </View>
                       {/* Loading Indicator */}
                       {loading ? (
@@ -332,7 +331,7 @@ const openPdfNew = async () => {
                     </View>
                 </View>
             </Modal>
-              </View> 
+           
 
                {/* Download Button */}           
 
@@ -344,7 +343,7 @@ const openPdfNew = async () => {
                 //onPress={downloadAndOpenPdf}
                 disabled={isDownloading}
               >
-                <Ionicons name="download-outline" size={24} color="white" />
+                <Ionicons name="download-outline" size={22} color="yellow" />
                 <Text style={styles.downloadText}>
                   {isDownloading ? 'Downloading...' : 'Download'}
                 </Text>
@@ -373,10 +372,9 @@ const openPdfNew = async () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 10, backgroundColor: '#fff' },
-  section: { padding: 10, backgroundColor: '#f7f8fa', borderWidth: 1, borderRadius: 6, borderColor: '#f7f9fc' },
   label: { fontSize: 16, marginBottom: 6, color: '#424242', fontWeight: '500' },
-  modalcontainerInput: { flexDirection: 'row', alignItems: 'center', marginBottom: 5 },
-  textInput: { fontSize: 15, color: '#333', borderColor: '#ccc', borderWidth: 1, borderRadius: 4, paddingHorizontal: 8, paddingVertical: 0, height: 40 },
+  modalcontainerInput: { flexDirection: 'row', alignItems: 'center', marginBottom: 50 },
+  textInput: { fontSize: 15, color: '#000', borderColor: '#ccc', borderWidth: 1, borderRadius: 4, paddingHorizontal: 8, paddingVertical: 0, height: 40 },
   buttonLov: { height: 40, width: 35, justifyContent: 'center', alignItems: 'center', backgroundColor: '#007BFF', borderRadius: 4, marginRight: -33, zIndex: 1 },
   modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
   modalContent: { flex: 1, width: '70%', maxHeight: 450, backgroundColor: '#e4e4e4', borderRadius: 2, padding: 5 },

@@ -162,7 +162,7 @@ const AddCustomer = () => {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.container}>
-          <Text style={styles.heading}>Add Customer Details</Text>           
+          <Text style={styles.heading}>Fill Customer Details</Text>           
             <View style={styles.row}>
                 <Text style={styles.label}>Customer Name <Text style={styles.asterisk}>*</Text></Text>
                 <TextInput
@@ -239,7 +239,7 @@ const AddCustomer = () => {
           >
             {loading
               ? <ActivityIndicator color="#fff" />
-              : <Text style={styles.addButtonText}>Add Customer</Text>}
+              : <Text style={styles.addButtonText}>Save Customer</Text>}
           </TouchableOpacity>
              {/* Reusable Custom Alert */}
         <AlertWithIcon
@@ -264,18 +264,18 @@ const styles = StyleSheet.create({
     },
     container: {
       flex: 1,  // Ensure the content container grows
-      backgroundColor: '#f0f0f0',
-      paddingHorizontal: 10,
-      paddingBottom: 10,
-      paddingTop: 10,
+      backgroundColor: '#ffffffff',    
+      padding: 10,
     },
     
     heading: {      
-      fontSize: 17,      
-      color: '#084da1',
-      fontWeight: '500',
+      fontSize: 16,      
+      color: '#208cf3',
+      fontWeight: '400',
       letterSpacing: 0.3,
       marginBottom: 10,
+      textAlign: 'center'
+      
     },
     addButton: {
       backgroundColor: '#208cf3',

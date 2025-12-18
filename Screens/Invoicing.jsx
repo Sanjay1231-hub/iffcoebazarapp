@@ -1053,10 +1053,10 @@ export default function Invoicing() {
                                             </View>
 
                                             <View style={styles.header}>                           
-                                                <Text style={[styles.headerText, { flex: 4, textAlign: 'center' }]}>Product Name</Text>
-                                                <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Prod. Cd.</Text>
-                                                <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Bag Cd.</Text>
-                                                <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Stock</Text>                        
+                                                <Text style={[styles.headerText, { flex: 4.2, textAlign: 'center' }]}>Product Name</Text>
+                                                <Text style={[styles.headerText, { flex: 1.5, textAlign: 'center' }]}>Prod. Cd.</Text>
+                                                <Text style={[styles.headerText, { flex: 1.5, textAlign: 'center' }]}>Bag Cd.</Text>
+                                                <Text style={[styles.headerText, { flex: 1.1, textAlign: 'center' }]}>Stock</Text>                        
                                             </View>
                                             {/* Loading Indicator */}
                                             {loading ? (
@@ -1077,10 +1077,10 @@ export default function Invoicing() {
                                                                     <Text style={[styles.cell, { flex: 4.7, textAlign: 'left' }]}>
                                                                     {item.PRD_DESC || 'No Data'}
                                                                     </Text> 
-                                                                    <Text style={[styles.cell, { flex: 1, textAlign: 'left' }]}>
+                                                                    <Text style={[styles.cell, { flex: 1.5, textAlign: 'left' }]}>
                                                                     {item.PRD_CD || 'No Prd Code'}
                                                                     </Text>
-                                                                    <Text style={[styles.cell, { flex: 1, textAlign: 'left' }]}>
+                                                                    <Text style={[styles.cell, { flex: 1.5, textAlign: 'left' }]}>
                                                                     {item.BAG_CD || 'No Prd Code'}
                                                                     </Text>
                                                                     <Text style={[styles.cell, { flex: 1, textAlign: 'right' }]}>
@@ -1433,17 +1433,17 @@ export default function Invoicing() {
                     <View style={styles.Custrow}>
                         <Text style={[styles.label, { marginRight: 40}]}>ID:</Text>
                         <TextInput
-                            style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
+                            style={[styles.input, { width: '84%', color: '#333', backgroundColor: '#f0f0f0' }]}
                             value={selectedCustId}
                             editable={false}
-                             allowFontScaling={false}
+                            allowFontScaling={false}
                         />
                     </View>
                     {/* Phone Row */}
                     <View style={styles.Custrow}>
                         <Text style={[styles.label, { marginRight: 11}]}>Phone:</Text>
                         <TextInput
-                            style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
+                            style={[styles.input, { width: '84%', color: '#333', backgroundColor: '#f0f0f0' }]}
                             value={selectedCustPhone}
                             editable={false}
                              allowFontScaling={false}
@@ -1454,7 +1454,7 @@ export default function Invoicing() {
                     <View style={styles.Custrow}>
                         <Text style={[styles.label, { marginRight: 20}]}>State:</Text>
                         <TextInput
-                            style={[styles.input, { width: '85%', color: '#333', backgroundColor: '#f0f0f0' }]}
+                            style={[styles.input, { width: '84%', color: '#333', backgroundColor: '#f0f0f0' }]}
                             value={selectedCustState}
                             editable={false}
                              allowFontScaling={false}
@@ -1521,9 +1521,9 @@ export default function Invoicing() {
                                 {loading ? (
                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                                         <View style={{ transform: [{ scale: 0.6 }] }}>
-          <ActivityIndicator size={50} color="#4a80f5" />
-        </View>
-                                    </View>
+                                <ActivityIndicator size={50} color="#4a80f5" />
+                                </View>
+                                                            </View>
                                 ) : (
 
                                 <FlatList
@@ -1716,10 +1716,6 @@ const styles = StyleSheet.create({
         marginTop: 0,
         justifyContent: 'center',
       
-        // padding: 3,
-        // borderColor: '#ccc',
-        // borderWidth: 1,
-        // borderRadius: 4,
     }, 
     tabheader: {
         fontSize: 16,
@@ -1794,14 +1790,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },    
     modalItem: {
-        fontSize: 16,
+        fontSize: 15,
         letterSpacing: 0.3,
         padding: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
     searchInput: {
-        height: 37,
+        minHeight: 35,
         fontSize: 15,
         letterSpacing: 0.3,
         color: '#333',
@@ -1823,14 +1819,14 @@ const styles = StyleSheet.create({
         borderBottomColor: '#333',
         //borderBottomWidth: 1,
         marginBottom: 5,
-        padding: 3,
+        padding: 2,
         borderColor: '#ccc',
-        borderWidth: 1,
+        //borderWidth: 1,
         borderRadius: 4,
     },   
     textInput: {
         flex: 1, // allow it to expand between icons
-        fontSize: 16,
+        fontSize: 15,
         color: '#000',
         paddingVertical: 0, // prevent extra height from internal padding
         paddingHorizontal: 8,
@@ -1864,7 +1860,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalTitle: {
-        fontSize: 14,
+        fontSize: 15,
         color: '#333',
         backgroundColor: '#e4e4e4',
         paddingVertical: 3,
@@ -1916,6 +1912,7 @@ const styles = StyleSheet.create({
         width: '100%',
         //justifyContent: 'space-between',
         backgroundColor: '#6c80ad',
+        
     },
     headerText: {
         flex: 1,
@@ -1924,7 +1921,8 @@ const styles = StyleSheet.create({
         color: '#fff',
         borderRightWidth: 1,
         borderColor: '#FFFFFF',
-        letterSpacing: 0.3,
+        letterSpacing: 0.2,
+        paddingVertical: 4,
     },
     flatList: {
         flexGrow: 1, // This makes the FlatList take the available space

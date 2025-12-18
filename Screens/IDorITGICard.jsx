@@ -87,7 +87,9 @@ const IDorITGICard = () => {
           <Text style={styles.pickerText}>
             {options.find(option => option.value === selectedValue)?.label || '--Select--'}
           </Text>
-          <Ionicons name="chevron-down" size={20} color="#5f5f5fff" />
+          <View style={styles.iconContainer}>
+              <Ionicons name="chevron-down" size={18} color="#ffffff" />
+            </View>
         </TouchableOpacity>
 
         <Modal
@@ -128,7 +130,7 @@ const IDorITGICard = () => {
           onPress={openPdfNew}
           disabled={isDownloading}
         >
-          <Ionicons name="open-outline" size={24} color="white" />
+          <Ionicons name="open-outline" size={22} color="yellow" />
           <Text style={styles.downloadText}>
             {isDownloading ? 'Downloading...' : 'Download'}
           </Text>
@@ -159,6 +161,16 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     borderColor: '#f7f9fc',    
   },
+    iconContainer: {
+  width: 35,
+  height: 40,
+  borderTopRightRadius: 5,        // circle
+  borderBottomRightRadius: 5,        // circle
+  backgroundColor: '#007BFF', // your theme color
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginRight: -10,
+},
   label: {
     fontSize: 16,
     marginBottom: 12,
@@ -174,6 +186,7 @@ const styles = StyleSheet.create({
   pickerButton: {
     paddingHorizontal: 10,
     height: 40,
+    color: '#333',
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
@@ -184,6 +197,7 @@ const styles = StyleSheet.create({
   },
   pickerText: {
     fontSize: 15,
+    color: '#333',
   },
   modalContainer: {
     flex: 1,
@@ -204,10 +218,11 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
   },
   optionText: {
-    fontSize: 16,
+    fontSize: 15,
+    color: '#333'
   },
   selectedOption: {
-    backgroundColor: '#61bdfa',
+    backgroundColor: '#61bdfa',    
   },
   buttonContainer: {
     justifyContent: 'center',      

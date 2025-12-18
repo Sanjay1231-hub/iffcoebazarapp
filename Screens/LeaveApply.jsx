@@ -293,7 +293,7 @@ const LeaveApply = () => {
               value={reason}
               onChangeText={setReason}
               placeholder="Enter the reason for your leave..."
-              placeholderTextColor='#a3a3a3'
+              placeholderTextColor='#ddd'
               allowFontScaling={false}
             />
           </View>
@@ -345,8 +345,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     letterSpacing: 0.3, 
   },
-  dateButton: {
-    //backgroundColor: '#f0f0f0',
+  dateButton: {                
+    height: 35, 
     backgroundColor: '#f1f1f1',
     padding: 5,
     borderRadius: 5,
@@ -361,8 +361,8 @@ const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: 15,
-    lineHeight: 20,            // Ensures text fits vertically
-    minHeight: 40,             // Use minHeight instead of fixed height
+    lineHeight: 22,            // Ensures text fits vertically
+    height: 40,             // Use minHeight instead of fixed height
     color: '#333',
     backgroundColor: '#fff',
     borderColor: '#ccc',
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
   },
   submitText: {
     color: '#fff',
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: '400',
     letterSpacing: 0.3, 
   },

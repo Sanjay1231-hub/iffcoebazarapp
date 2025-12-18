@@ -463,246 +463,246 @@ const LoginPage = ({ onLogin }) => {
   return (
 
     <KeyboardAvoidingView
-    style={{ flex: 1 }}
-    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
-  >
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
- <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 80 : 0}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
 
-      <ImageBackground
-        source={require('../assets/LoginBG02.png')}
-        style={styles.backgroundImage}
-      >
-        <View style={styles.container}>
-          <View style={styles.ImageContainer}>
-            <Image
-              style={styles.image}
-              source={require('../assets/iffco-logo.png')}
-            />
-            <Text style={styles.title}>Welcome To</Text>
-            <Text style={styles.title1}>BazarSoft</Text>
-          </View>
-
-          <View style={{ marginBottom: 10, width: '100%' }}>
-            <LoginUserType selectedValue={selectedValue} onValueChange={EmployeeTypeChange} />
-          </View>
-
-          {selectedValue !== 'FRANCHISES' && (
-            <>
-
-              <LoginInput
-                style={styles.input}
-                placeholder="Personal No"
-                iconName="person-outline"
-                value={username}
-                onChangeText={(text) => {
-                  setUsername(text); // Correctly setting username
-                }}
-                placeholderTextColor="#a3a3a3"
+        <ImageBackground
+          source={require('../assets/LoginBG02.png')}
+          style={styles.backgroundImage}
+        >
+          <View style={styles.container}>
+            <View style={styles.ImageContainer}>
+              <Image
+                style={styles.image}
+                source={require('../assets/iffco-logo.png')}
               />
+              <Text style={styles.title}>Welcome To</Text>
+              <Text style={styles.title1}>BazarSoft</Text>
+            </View>
 
-              <Passwordinput
-                style={styles.input}
-                placeholder="Password"
-                iconName="lock-closed-outline"
-                secureTextEntry
-                value={password}
-                onChangeText={(text) => {
-                  setPassword(text); // Correctly setting password
-                }}
-                placeholderTextColor="#a3a3a3"
-              />
-            </>
-          )}
+            <View style={{ marginBottom: 10, width: '100%' }}>
+              <LoginUserType selectedValue={selectedValue} onValueChange={EmployeeTypeChange} />
+            </View>
 
-          {selectedValue === 'FRANCHISES' && !otpSent && !frBAPassword &&(
-            <>
-              <View style={styles.mobileInputContainer}>
-                <Ionicons name="call-outline" size={20} color="#a3a3a3" style={styles.icon} />
-                <TextInput
-                  style={styles.inputWithIcon}
-                  placeholder="Mobile Number"
-                  keyboardType="phone-pad"
-                  maxLength={10}
-                  value={mobileNumber}
-                  onChangeText={(text) => setMobileNumber(text)} // Updating mobile number state
+            {selectedValue !== 'FRANCHISES' && (
+              <>
+
+                <LoginInput
+                  style={styles.input}
+                  placeholder="Personal No"
+                  iconName="person-outline"
+                  value={username}
+                  onChangeText={(text) => {
+                    setUsername(text); // Correctly setting username
+                  }}
                   placeholderTextColor="#a3a3a3"
-                   allowFontScaling={false}
                 />
-              </View>
-            
 
-              <View style={styles.rowButtonsContainer}>
+                <Passwordinput
+                  style={styles.input}
+                  placeholder="Password"
+                  iconName="lock-closed-outline"
+                  secureTextEntry
+                  value={password}
+                  onChangeText={(text) => {
+                    setPassword(text); // Correctly setting password
+                  }}
+                  placeholderTextColor="#a3a3a3"
+                />
+              </>
+            )}
+
+            {selectedValue === 'FRANCHISES' && !otpSent && !frBAPassword &&(
+              <>
+                <View style={styles.mobileInputContainer}>
+                  <Ionicons name="call-outline" size={20} color="#a3a3a3" style={styles.icon} />
+                  <TextInput
+                    style={styles.inputWithIcon}
+                    placeholder="Mobile Number"
+                    keyboardType="phone-pad"
+                    maxLength={10}
+                    value={mobileNumber}
+                    onChangeText={(text) => setMobileNumber(text)} // Updating mobile number state
+                    placeholderTextColor="#a3a3a3"
+                    allowFontScaling={false}
+                  />
+                </View>
+              
+
+                <View style={styles.rowButtonsContainer}>
+                  <TouchableOpacity
+                    style={[styles.rowButton, { flex: 0.4, marginRight: 5 }]}
+                    onPress={handleSendOtp}
+                    disabled={otpLoading}
+                  >
+                    {otpLoading ? (
+                      <ActivityIndicator size="small" color="#ffffff" />
+                    ) : (
+                      <Text style={styles.loginButtonText}>Send OTP</Text>
+                    )}
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={[styles.rowButton, { flex: 0.6, marginLeft: 1 }]}
+                    onPress={handlePasswordLogin}
+                    disabled={pwdLoading}
+                  >
+                    {pwdLoading ? (
+                      <ActivityIndicator size="small" color="#ffffff" />
+                    ) : (
+                      <Text style={styles.loginButtonText}>Enter Password</Text>
+                    )}
+                  </TouchableOpacity>
+                </View>
+
+
+                {/* Resend OTP button */}
+                {otpSent && resendTimer == 0 && (
+                  <TouchableOpacity
+                    style={styles.resendButton}
+                    onPress={handleResendOtp}
+                    disabled={resendLoading}
+                  >
+                    {resendLoading ? (
+                      <ActivityIndicator size="small" color="#ffffff" />
+                    ) : (
+                      <Text style={styles.resendButtonText}>Resend OTP</Text>
+                    )}
+                  </TouchableOpacity>
+                )}
+
+                {otpSent && resendTimer > 0 && (
+                  <Text style={styles.timerText}>Wait for {resendTimer} seconds to resend OTP</Text>
+                )}
+              </>
+            )}
+
+            {selectedValue === 'FRANCHISES' && otpSent && (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter OTP"
+                  keyboardType="numeric"
+                  maxLength={4}
+                  value={otp}
+                  onChangeText={(text) => setOtp(text)} // Updating OTP state
+                  placeholderTextColor="#a3a3a3"
+                  allowFontScaling={false}
+                />
+
+                {/* Verify OTP Button */}
                 <TouchableOpacity
-                  style={[styles.rowButton, { flex: 0.4, marginRight: 5 }]}
-                  onPress={handleSendOtp}
+                  style={styles.loginButton}
+                  onPress={handleSubmitOtp}
                   disabled={otpLoading}
                 >
                   {otpLoading ? (
                     <ActivityIndicator size="small" color="#ffffff" />
                   ) : (
-                    <Text style={styles.loginButtonText}>Send OTP</Text>
+                    <Text style={styles.loginButtonText}>Verify OTP</Text>
                   )}
                 </TouchableOpacity>
 
+                {/* Reload OTP Button */}
                 <TouchableOpacity
-                  style={[styles.rowButton, { flex: 0.6, marginLeft: 1 }]}
-                  onPress={handlePasswordLogin}
+                  //style={styles.resendButton}
+                  onPress={handleResendOtp} // Call your OTP resend function
+                  disabled={otpLoading}
+                >
+                  <Text style={styles.reloadButtonText}>Resend OTP</Text>
+                </TouchableOpacity>
+              </>
+            )}
+
+            {selectedValue === 'FRANCHISES' && frBAPassword && (
+              <>
+                {/* <TextInput
+                  style={styles.input}
+                  placeholder="Enter Password"
+                  value={frBALoginPassword}
+                  onChangeText={(text) => setFrBALoginPassword(text)}
+                  placeholderTextColor="#a3a3a3"
+                  secureTextEntry={true} // hide password
+                /> */}
+
+                <View style={styles.passinputContainer}>
+                    <Ionicons name="lock-closed-outline" size={20} color="#555" style={styles.passicon} />
+
+                    <TextInput
+                      style={styles.passinput}
+                      placeholder="Enter Password"
+                      placeholderTextColor="#a3a3a3"
+                      secureTextEntry={!showPassword}
+                      value={frBALoginPassword}
+                      onChangeText={(text) => setFrBALoginPassword(text)}
+                      allowFontScaling={false}
+                    />
+
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                      <Ionicons
+                        name={showPassword ? "eye-outline" : "eye-off-outline"}
+                        size={20}
+                        color="#555"
+                        style={styles.passicon}
+                      />
+                    </TouchableOpacity>
+                  </View>
+
+                <TouchableOpacity
+                  style={styles.loginButton}
+                  onPress={handleLoginWithPassword} // call the new password login function
                   disabled={pwdLoading}
                 >
                   {pwdLoading ? (
                     <ActivityIndicator size="small" color="#ffffff" />
                   ) : (
-                    <Text style={styles.loginButtonText}>Enter Password</Text>
+                    <Text style={styles.loginButtonText}>Login with Password</Text>
                   )}
                 </TouchableOpacity>
-              </View>
+              </>
+            )}
 
 
-              {/* Resend OTP button */}
-              {otpSent && resendTimer == 0 && (
-                <TouchableOpacity
-                  style={styles.resendButton}
-                  onPress={handleResendOtp}
-                  disabled={resendLoading}
-                >
-                  {resendLoading ? (
-                    <ActivityIndicator size="small" color="#ffffff" />
-                  ) : (
-                    <Text style={styles.resendButtonText}>Resend OTP</Text>
-                  )}
-                </TouchableOpacity>
-              )}
-
-              {otpSent && resendTimer > 0 && (
-                <Text style={styles.timerText}>Wait for {resendTimer} seconds to resend OTP</Text>
-              )}
-            </>
-          )}
-
-          {selectedValue === 'FRANCHISES' && otpSent && (
-            <>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter OTP"
-                keyboardType="numeric"
-                maxLength={4}
-                value={otp}
-                onChangeText={(text) => setOtp(text)} // Updating OTP state
-                placeholderTextColor="#a3a3a3"
-                 allowFontScaling={false}
-              />
-
-              {/* Verify OTP Button */}
+            {selectedValue !== 'FRANCHISES' && (
               <TouchableOpacity
                 style={styles.loginButton}
-                onPress={handleSubmitOtp}
-                disabled={otpLoading}
+                onPress={handleLogin}
+                disabled={loading}
               >
-                {otpLoading ? (
+                {loading ? (
                   <ActivityIndicator size="small" color="#ffffff" />
                 ) : (
-                  <Text style={styles.loginButtonText}>Verify OTP</Text>
+                  <Text style={styles.loginButtonText}>Login</Text>
                 )}
               </TouchableOpacity>
+            )}
 
-              {/* Reload OTP Button */}
-              <TouchableOpacity
-                //style={styles.resendButton}
-                onPress={handleResendOtp} // Call your OTP resend function
-                disabled={otpLoading}
-              >
-                <Text style={styles.reloadButtonText}>Resend OTP</Text>
-              </TouchableOpacity>
-            </>
-          )}
-
-          {selectedValue === 'FRANCHISES' && frBAPassword && (
-            <>
-              {/* <TextInput
-                style={styles.input}
-                placeholder="Enter Password"
-                value={frBALoginPassword}
-                onChangeText={(text) => setFrBALoginPassword(text)}
-                placeholderTextColor="#a3a3a3"
-                secureTextEntry={true} // hide password
-              /> */}
-
-              <View style={styles.passinputContainer}>
-                  <Ionicons name="lock-closed-outline" size={20} color="#555" style={styles.passicon} />
-
-                  <TextInput
-                    style={styles.passinput}
-                    placeholder="Enter Password"
-                    placeholderTextColor="#a3a3a3"
-                    secureTextEntry={!showPassword}
-                    value={frBALoginPassword}
-                    onChangeText={(text) => setFrBALoginPassword(text)}
-                     allowFontScaling={false}
-                  />
-
-                  <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                    <Ionicons
-                      name={showPassword ? "eye-outline" : "eye-off-outline"}
-                      size={20}
-                      color="#555"
-                      style={styles.passicon}
+            {/* Reusable Custom Alert */}
+            <AlertWithIcon
+                      visible={alert.visible}
+                      title={alert.title}
+                      message={alert.message}
+                      type={alert.type}
+                      onClose={() => setAlert({ ...alert, visible: false })}
                     />
-                  </TouchableOpacity>
-                </View>
+          </View>
+          <View style={styles.versioncontainer}>
+            <Text style={styles.versionText}>App Version: {Constants.expoConfig.version}</Text>
+          </View>
+        </ImageBackground>
 
-              <TouchableOpacity
-                style={styles.loginButton}
-                onPress={handleLoginWithPassword} // call the new password login function
-                disabled={pwdLoading}
-              >
-                {pwdLoading ? (
-                  <ActivityIndicator size="small" color="#ffffff" />
-                ) : (
-                  <Text style={styles.loginButtonText}>Login with Password</Text>
-                )}
-              </TouchableOpacity>
-            </>
-          )}
+        </ScrollView>
 
+      </TouchableWithoutFeedback>
 
-          {selectedValue !== 'FRANCHISES' && (
-            <TouchableOpacity
-              style={styles.loginButton}
-              onPress={handleLogin}
-              disabled={loading}
-            >
-              {loading ? (
-                <ActivityIndicator size="small" color="#ffffff" />
-              ) : (
-                <Text style={styles.loginButtonText}>Login</Text>
-              )}
-            </TouchableOpacity>
-          )}
-
-          {/* Reusable Custom Alert */}
-          <AlertWithIcon
-                    visible={alert.visible}
-                    title={alert.title}
-                    message={alert.message}
-                    type={alert.type}
-                    onClose={() => setAlert({ ...alert, visible: false })}
-                  />
-        </View>
-        <View style={styles.versioncontainer}>
-          <Text style={styles.versionText}>App Version: {Constants.expoConfig.version}</Text>
-        </View>
-      </ImageBackground>
-
-      </ScrollView>
-
-    </TouchableWithoutFeedback>
-
-  </KeyboardAvoidingView>
+    </KeyboardAvoidingView>
   
   );
 };
@@ -744,7 +744,7 @@ const styles = StyleSheet.create({
     //justifyContent: 'center', // Centers content vertically if needed
     alignSelf: 'center', // Ensures proper alignment
     marginBottom: 55,
-     minHeight: 400,     // ⬅ Ensures enough height for scrolling
+    minHeight: 300,     // ⬅ Ensures enough height for scrolling
   },
   versioncontainer: {
     position: 'absolute',
@@ -788,6 +788,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
     shadowColor: '#000',
+    Color: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
