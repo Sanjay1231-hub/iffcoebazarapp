@@ -168,7 +168,6 @@ function StoreMaster() {
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,
-        //alignItems: 'center',
         justifyContent: 'flex-start',
         backgroundColor: '#ffffff',
         padding: 3,

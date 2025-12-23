@@ -134,7 +134,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     justifyContent: 'flex-start',
     backgroundColor: '#ffffff',
-    width: '100%',
     padding: 2,  // Optional padding
   },   
   asondate: {

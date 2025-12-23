@@ -332,7 +332,7 @@ useEffect(() => {
   );
 };
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create({   
   header: {
     width: '100%',
     paddingHorizontal: 8,
@@ -347,15 +347,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 5,
     elevation: 5,
-  },
-  container: {
-    flexGrow: 1,
-    //minHeight: 600,  // Ensure enough height for scrolling
-    backgroundColor: '#ffffff',
-    paddingTop: 15,
-    paddingHorizontal: 15,
-    //paddingTop: 3,
-  }, 
+  },  
   profileContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -434,11 +426,6 @@ const styles = StyleSheet.create({
     color: '#616161',
     marginBottom: 5,
     letterSpacing: 0.3,
-  },
-  userInfoLink: {
-    color: '#2a7afa',
-    fontSize: 14,
-    cursor: 'pointer',
   },
   label: {
     fontSize: 14,

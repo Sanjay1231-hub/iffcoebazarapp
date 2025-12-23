@@ -753,7 +753,7 @@ const styles = StyleSheet.create({
   },
   versionText: {
     fontSize: 13,
-    letterSpacing: 0.3,
+    letterSpacing: 0.25,
     color: '#fff',
   },
   title: {
@@ -788,7 +788,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginBottom: 10,
     shadowColor: '#000',
-    Color: '#000',
+    color: '#000000',
+    backgroundColor: '#FFFFFF',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -820,7 +821,8 @@ const styles = StyleSheet.create({
   },
   loginButton: {
     width: '100%',
-    height: 40,
+    minHeight: 40,
+    lineHeight: 22,
     backgroundColor: '#f37e20',
     borderRadius: 5,
     justifyContent: 'center',

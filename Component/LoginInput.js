@@ -12,7 +12,7 @@ const LoginInput = ({
   placeholderTextColor,
 }) => {
   return (
-    <View style={[styles.inputContainer, style]}>
+    <View style={[styles.Container, style]}>
       <Ionicons name={iconName} size={20} style={styles.icon} />
       <TextInput
         placeholder={placeholder}
@@ -38,7 +38,7 @@ const Passwordinput = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <View style={[styles.inputContainer, style]}>
+    <View style={[styles.Container, style]}>
       <Ionicons name={iconName} size={20} style={styles.icon} />
       <TextInput
         placeholder={placeholder}
@@ -61,9 +61,14 @@ const Passwordinput = ({
 };
 
 const styles = StyleSheet.create({
-      inputContainer: {    
+    Container: {       
       flexDirection: 'row',
-      alignItems: 'center',   
+      alignItems: 'center',  
+      backgroundColor: '#ffffff',
+      minHeight: 40,
+      //borderWidth: 1,
+    //borderRadius: 6,
+    //paddingHorizontal: 10,
     },
     icon: {
       marginRight: 10,
@@ -77,6 +82,8 @@ const styles = StyleSheet.create({
       letterSpacing: 0.3,
       minHeight: 36,         // use minHeight instead of fixed height
       textAlignVertical: 'center', // vertical centering
+      color: '#000000',
+      backgroundColor: '#FFFFFF',
     },
   
 });

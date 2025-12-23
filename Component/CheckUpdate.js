@@ -17,42 +17,62 @@ const CkeckUpdate = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [storeUpdateUrl, setStoreUpdateUrl] = useState('');
 
-  // Check OTA updates (only in custom client or production)
-  const checkOTAUpdate = async () => {
-    if (!Updates) {
-      //console.log('Skipping OTA update check in Expo Go');
-      return;
-    }
-    try {
-      const update = await Updates.checkForUpdateAsync();
-      if (update.isAvailable) {
-        await Updates.fetchUpdateAsync();
-        setModalVisible(true);
-      }
-    } catch (err) {
-      //console.log('Error checking OTA update:', err);
-    }
-  };
+  // // Check OTA updates (only in custom client or production)
+  // const checkOTAUpdate = async () => {
+  //   if (!Updates) {
+  //     //console.log('Skipping OTA update check in Expo Go');
+  //     return;
+  //   }
+  //   try {
+  //     const update = await Updates.checkForUpdateAsync();
+  //     if (update.isAvailable) {
+  //       await Updates.fetchUpdateAsync();
+  //       setModalVisible(true);
+  //     }
+  //   } catch (err) {
+  //     //console.log('Error checking OTA update:', err);
+  //   }
+  // };
 
-  // Check Play Store / Native update
-  const checkStoreUpdate = async () => { 
-    try {    
-      const installedVersion = Constants.expoConfig.version || '0.0.0';
-      //console.log("installed version is", installedVersion);   
+  // // Check Play Store / Native update
+  // const checkStoreUpdate = async () => { 
+  //   try {    
+  //     const installedVersion = Constants.expoConfig.version || '0.0.0';
+  //     //console.log("installed version is", installedVersion);   
        
-      const latestVersion = '1.0.4';
-      const appId = Constants.expoConfig.android?.package;
-       //console.log("Application id/package name", appId);
+  //     const latestVersion = '1.0.4';
+  //     const appId = Constants.expoConfig.android?.package;
+  //      //console.log("Application id/package name", appId);
 
-       const normalizeVersion = (v) =>
-        v.split(".").map(n => n.padStart(2, "0")).join("");
+  //      const normalizeVersion = (v) =>
+  //       v.split(".").map(n => n.padStart(2, "0")).join("");
 
-      if (normalizeVersion(installedVersion) < normalizeVersion(latestVersion)) {     
-        setStoreUpdateUrl(`https://play.google.com/store/apps/details?id=${appId}`);
+  //     if (normalizeVersion(installedVersion) < normalizeVersion(latestVersion)) {     
+  //       setStoreUpdateUrl(`https://play.google.com/store/apps/details?id=${appId}`);
+  //       setModalVisible(true);
+  //     }
+  //   } catch (err) {
+  //     //console.log('Error checking store version:', err);
+  //   }
+  // };
+
+  const checkStoreUpdate = async () => {
+    try {
+      const installedVersionCode =
+        Constants.expoConfig?.android?.versionCode ?? 0;
+
+      // 🔴 Fetch this from API in real apps
+      const latestVersionCode = 13;
+
+      if (installedVersionCode < latestVersionCode) {
+        const appId = Constants.expoConfig.android?.package;
+        setStoreUpdateUrl(
+          `https://play.google.com/store/apps/details?id=${appId}`
+        );
         setModalVisible(true);
       }
-    } catch (err) {
-      //console.log('Error checking store version:', err);
+    } catch (e) {
+      console.log('Update check error', e);
     }
   };
 

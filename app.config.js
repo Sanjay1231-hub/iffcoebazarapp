@@ -66,7 +66,7 @@ export default {
       compileSdkVersion: 35,
       targetSdkVersion: 35,
       minSdkVersion: 24,
-      versionCode: 12,
+      versionCode: 14,
       //versionCode: 1,
       package: "com.iffcoebazar.ebazar",
       //package: "com.iffcoebazar.bazarsoft",
@@ -76,14 +76,7 @@ export default {
       jsEngine: "jsc", // Redundant but explicit confirmation
       hermes: false,   // Redundant but explicit confirmation
 
-      // Permissions
-      // permissions: [
-      //   "READ_EXTERNAL_STORAGE",
-      //   "WRITE_EXTERNAL_STORAGE",
-      //   "RECORD_AUDIO",
-      //   "INTERNET",
-      //   "POST_NOTIFICATIONS",
-      // ],
+     
       permissions: [
         "INTERNET",
         "RECORD_AUDIO",

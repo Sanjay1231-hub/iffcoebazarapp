@@ -118,7 +118,7 @@ const InvoiceHistory = () => {
 
     const RenderItemComponent = React.memo(({ item }) => (        
         <View style={styles.row}>
-            <Text style={[styles.cell, { flex: 2.2, textAlign: 'left' }]}>
+            <Text style={[styles.cell, { flex: 2.1, textAlign: 'left' }]}>
                 {item.INVOICE_NO || 'No data'}
             </Text>         
             <Text style={[styles.cell, { flex: 1, textAlign: 'right' }]}>
@@ -127,7 +127,7 @@ const InvoiceHistory = () => {
             <Text style={[styles.cell, { flex: 0.5, textAlign: 'right' }]}>
                 {item.QTY || 'No data'}
             </Text> 
-            <Text style={[styles.cell, { flex: 1, textAlign: 'right' }]}>
+            <Text style={[styles.cell, { flex: 0.81, textAlign: 'right' }]}>
                 {item.AMOUNT || 'No data'}
             </Text>  
 
@@ -164,7 +164,7 @@ const InvoiceHistory = () => {
             <Text style={[styles.headerText, { flex: 2, textAlign: 'center' }]}>Invoice No</Text>
             <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Date</Text>
             <Text style={[styles.headerText, { flex: 0.54, textAlign: 'center' }]}>Qty</Text>
-            <Text style={[styles.headerText, { flex: 1, textAlign: 'center' }]}>Amount</Text>
+            <Text style={[styles.headerText, { flex: 0.8, textAlign: 'center' }]}>Amount</Text>
             <Text style={[styles.headerText, { flex: 0.55, textAlign: 'center' }]}>Pdf</Text>
         </View>
 
@@ -227,9 +227,10 @@ const styles = StyleSheet.create({
   },    
   cell: {
     flex: 1,
+    fontSize: 14,
     backgroundColor: '#ffffff',       
     paddingVertical: 5,
-    paddingHorizontal: 5,
+    paddingHorizontal: 3,
     borderRightWidth: 1,
     borderColor: '#ccc',
   },

@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import AlertWithIcon from './Component/AlertWithIcon';
 import CkeckUpdate from './Component/CheckUpdate';
 import ErrorBoundary from './Component/ErrorBoundary';
+import CheckAppUpdate from './Component/CheckAppUpdate';
 
 const AUTO_LOGOUT_TIME = 40 * 60 * 1000; // 40 minutes
 const TOKEN_STORAGE_KEY = 'ExponentPushToken[p1hZtFJkkse7DWBFkO_9rI]';
@@ -333,7 +334,8 @@ useEffect(() => {
             </TouchableOpacity>
           )}
 
-          <CkeckUpdate />
+          {/* <CkeckUpdate /> */}
+          <CheckAppUpdate />
 
           <AlertWithIcon
             visible={alert.visible}

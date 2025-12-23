@@ -374,10 +374,10 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 10, backgroundColor: '#fff' },
   label: { fontSize: 16, marginBottom: 6, color: '#424242', fontWeight: '500' },
   modalcontainerInput: { flexDirection: 'row', alignItems: 'center', marginBottom: 50 },
-  textInput: { fontSize: 15, color: '#000', borderColor: '#ccc', borderWidth: 1, borderRadius: 4, paddingHorizontal: 8, paddingVertical: 0, height: 40 },
-  buttonLov: { height: 40, width: 35, justifyContent: 'center', alignItems: 'center', backgroundColor: '#007BFF', borderRadius: 4, marginRight: -33, zIndex: 1 },
+  textInput: { fontSize: 15, color: '#000000', borderColor: '#ccc', borderWidth: 1, borderRadius: 4, paddingHorizontal: 8, paddingVertical: 0, height: 40 },
+  buttonLov: { height: 40, width: 35, justifyContent: 'center', alignItems: 'center', backgroundColor: '#208cf3', borderRadius: 4, marginRight: -33, zIndex: 1 },
   modalContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'rgba(0,0,0,0.5)' },
-  modalContent: { flex: 1, width: '70%', maxHeight: 450, backgroundColor: '#e4e4e4', borderRadius: 2, padding: 5 },
+  modalContent: { flex: 1, width: '70%', maxHeight: 450, backgroundColor: '#e4e4e4', borderRadius: 4, padding: 5 },
   modalTitle: { fontSize: 14, fontWeight: '500', color: '#000' },
   lovclose: { textAlign: 'center' },
   headerText: { flex: 1, textAlign: 'center', fontSize: 14, color: '#fff', borderRightWidth: 1, borderColor: '#fff', padding: 4 },
@@ -386,8 +386,8 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', width: '100%', justifyContent: 'space-between', backgroundColor: '#6c80ad' },
   asterisk: { color: 'red', fontSize: 16 },
   buttonContainer: { justifyContent: 'center', alignItems: 'center', marginTop: 20 },
-  downloadButton: { flexDirection: 'row', paddingHorizontal: 20, backgroundColor: '#208cf3', borderRadius: 5, height: 40, alignItems: 'center', justifyContent: 'center', elevation: 5 },
-  downloadText: { color: '#fff', fontSize: 16, marginLeft: 10, fontWeight: '400' },
+  downloadButton: { flexDirection: 'row', paddingHorizontal: 12, backgroundColor: '#208cf3', borderRadius: 5, height: 40, alignItems: 'center', justifyContent: 'center', elevation: 5 },
+  downloadText: { color: '#fff', fontSize: 16, marginLeft: 4, fontWeight: '400' },
 });
 
 export default SalarySlip;

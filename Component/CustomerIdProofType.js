@@ -51,7 +51,7 @@ const CustomerIdProofType = ({ selectedValue = '', onValueChange = () => {} }) =
            animationType="fade"
          >
            <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-             <View style={styles.modalContainer}>
+             <View style={styles.Container}>
                <TouchableWithoutFeedback>
                  <View style={styles.modalContent}>
                    <FlatList
@@ -86,6 +86,12 @@ const CustomerIdProofType = ({ selectedValue = '', onValueChange = () => {} }) =
 };
 
 const styles = StyleSheet.create({
+  Container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+  },
   pickerButton: {
     flex: 1,
     height: 40,
@@ -111,12 +117,7 @@ const styles = StyleSheet.create({
   alignItems: 'center',
   marginRight: -10,
 },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-  },
+  
   modalContent: {
     width: 300,
     backgroundColor: '#fff',

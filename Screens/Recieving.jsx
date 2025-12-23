@@ -21,77 +21,140 @@ const Recieving = () => {
         setCurrentDate(formatDate(now));
     }, []);
 
-    useEffect(() => {
-        const fetchData = async () => {
-          try {
-            const loggedInEmpStore = await AsyncStorage.getItem('officeCode');
-            const loggedUser = await AsyncStorage.getItem('username');
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //       try {
+    //         const loggedInEmpStore = await AsyncStorage.getItem('officeCode');
+    //         const loggedUser = await AsyncStorage.getItem('username');
       
-            if (!loggedInEmpStore || !loggedUser) {
-              Alert.alert('Error', 'No store or user found');
-              return;
-            }
+    //         if (!loggedInEmpStore || !loggedUser) {
+    //           Alert.alert('Error', 'No store or user found');
+    //           return;
+    //         }
       
-            const postData = {
-              token: "IEBL0001",
-              apiId: "26",
-              inApiParameters: [
-                { label: "P_FSC_CD", value: loggedInEmpStore }
-              ],
-            };
+    //         const postData = {
+    //           token: "IEBL0001",
+    //           apiId: "26",
+    //           inApiParameters: [
+    //             { label: "P_FSC_CD", value: loggedInEmpStore }
+    //           ],
+    //         };
       
-            const response = await fetch('https://ebazarapi.iffco.in/API', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'User-Agent': 'ReactNativeApp/1.0',
-                  'Accept': 'application/json',
-                },
-                body: JSON.stringify(postData),
-              });
+    //         const response = await fetch('https://ebazarapi.iffco.in/API', {
+    //             method: 'POST',
+    //             headers: {
+    //               'Content-Type': 'application/json',
+    //               'User-Agent': 'ReactNativeApp/1.0',
+    //               'Accept': 'application/json',
+    //             },
+    //             body: JSON.stringify(postData),
+    //           });
       
-            const responseText = await response.text();
+    //         const responseText = await response.text();
       
-            if (!response.ok) {
-              throw new Error(`HTTP error! Status: ${response.status}`);
-            }
+    //         if (!response.ok) {
+    //           throw new Error(`HTTP error! Status: ${response.status}`);
+    //         }
       
-            let result;
-            try {
-              result = JSON.parse(responseText);
-            } catch (parseError) {
-              setAlert({
-                visible: true,
-                title: "Error",
-                message: "Failed to parse server response.",
-                type: "error",
-              });
-              return;
-            }
+    //         let result;
+    //         try {
+    //           result = JSON.parse(responseText);
+    //         } catch (parseError) {
+    //           setAlert({
+    //             visible: true,
+    //             title: "Error",
+    //             message: "Failed to parse server response.",
+    //             type: "error",
+    //           });
+    //           return;
+    //         }
       
-            const responseData = result.output;
+    //         const responseData = result.output;
       
-            if (Array.isArray(responseData)) {
-              setData(responseData);
-            } else {
-              throw new Error('Unexpected response format. Expected an array.');
-            }
+    //         if (Array.isArray(responseData)) {
+    //           setData(responseData);
+    //         } else {
+    //           throw new Error('Unexpected response format. Expected an array.');
+    //         }
       
-          } catch (error) {
-            //console.error('Error fetching data:', error);
-            setAlert({
-              visible: true,
-              title: "Fetch Error",
-              message: error.message,
-              type: "error",
-            });
-          } finally {
-            setLoading(false);
-          }
+    //       } catch (error) {
+    //         //console.error('Error fetching data:', error);
+    //         setAlert({
+    //           visible: true,
+    //           title: "Fetch Error",
+    //           message: error.message,
+    //           type: "error",
+    //         });
+    //       } finally {
+    //         setLoading(false);
+    //       }
+    //     };
+      
+    //     //fetchData();
+    //   }, []);
+
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+
+        const loggedInEmpStore = await AsyncStorage.getItem('officeCode');
+        const loggedUser = await AsyncStorage.getItem('username');
+
+        if (!loggedInEmpStore || !loggedUser) {
+          Alert.alert('Error', 'No store or user found');
+          return;
+        }
+
+        const postData = {
+          token: "IEBL0001",
+          apiId: "26",
+          inApiParameters: [
+            { label: "P_FSC_CD", value: loggedInEmpStore }
+          ],
         };
-      
-        fetchData();
-      }, []);
+
+        const response = await fetch('https://ebazarapi.iffco.in/API', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'ReactNativeApp/1.0',
+            'Accept': 'application/json',
+          },
+          body: JSON.stringify(postData),
+        });
+
+        const responseText = await response.text();
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const result = JSON.parse(responseText);
+        const responseData = result.output;
+
+        if (Array.isArray(responseData)) {
+          setData(responseData);   // ✅ Update modal list
+        } else {
+          throw new Error('Unexpected response format.');
+        }
+
+      } catch (error) {
+        setAlert({
+          visible: true,
+          title: "Fetch Error",
+          message: error.message,
+          type: "error",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    useEffect(() => {
+      fetchData();
+    }, []);
+
     
     const formatDate = (date) => {
         if (!date) return '--Select--';
@@ -206,6 +269,9 @@ const Recieving = () => {
               setPurchaseDate('');
               setQty('');
               setQtyEntered('');
+
+               // ✅ IMPORTANT: Refresh modal data
+                await fetchData();
             } else {
               throw new Error('Unexpected server response');
             }          

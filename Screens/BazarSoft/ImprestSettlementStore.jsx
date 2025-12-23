@@ -212,8 +212,8 @@ const pickDocument = async () => {
     } else {
       setAlert({
         visible: true,
-        title: 'No document file',
-        message: 'No document file was selected to upload.',
+        title: 'No PDF file',
+        message: 'No PDF file was selected to upload.',
         type: 'warning',
       });
     }
@@ -628,14 +628,14 @@ const pickDocument = async () => {
                   </Text>          
                 
                   <View style={{ flex: 1, justifyContent: 'space-evenly', alignItems: 'center', marginBottom: 10, flexDirection: 'row', paddingHorizontal: 10 }}>
-                      <TouchableOpacity onPress={pickDocument} style={[ styles.button, { backgroundColor: '#fcb51dff' }]}>
+                      <TouchableOpacity onPress={pickDocument} style={[ styles.button, { backgroundColor: '#eba204ff' }]}>
                           <Ionicons name="document-attach-outline" size={20} style={styles.icon} />
-                          <Text style={styles.buttonText}>Browse PDF file</Text>
+                          <Text style={styles.buttonText}>Upload PDF file</Text>
                       </TouchableOpacity>
                       
                       <TouchableOpacity onPress={pickImage} style={[ styles.button, { backgroundColor: '#5b5a61ff', }]}>
-                          <Ionicons name="image-outline" size={20} style={styles.icon} />
-                          <Text style={styles.buttonText}>Browse Image file</Text>
+                          <Ionicons name="image-outline" size={20} style={styles.icon1} />
+                          <Text style={styles.buttonText}>Upload Image file</Text>
                       </TouchableOpacity>
                   </View> 
                   
@@ -653,7 +653,7 @@ const pickDocument = async () => {
                         onPress={uploadImage}
                         style={[
                           styles.submitButton,
-                          { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', opacity: loading ? 0.6 : 1 }
+                          { flexDirection: 'row', opacity: loading ? 0.6 : 1 }
                         ]}
                         disabled={loading}
                       >
@@ -694,10 +694,9 @@ const pickDocument = async () => {
 
 const styles = StyleSheet.create({    
     container: {
-        flex: 1,       
-        paddingHorizontal: 5,
-        paddingVertical: 5,
-        backgroundColor: '#fff',
+      flex: 1,       
+      padding: 5,
+      backgroundColor: '#fff',
     },
     inputContainer: {
         flexDirection: 'row',
@@ -839,7 +838,7 @@ const styles = StyleSheet.create({
     submitButton: {
         backgroundColor: '#208cf3',
         width: '94%',
-        marginTop: 10,
+        //marginTop: 10,
         marginBottom: 20,
         borderRadius: 5,
         minHeight: 35,
@@ -858,29 +857,41 @@ const styles = StyleSheet.create({
         borderRadius: 4,
       },
       button: {
-        marginBottom: 10, 
+        //marginBottom: 10, 
         flexDirection: 'row',
-        paddingVertical: 6,
-        paddingHorizontal: 15,
+        //paddingVertical: 8,
+        //paddingHorizontal: 12,
         borderRadius: 5, // Rounded corners
         elevation: 5,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
-        //borderRightWidth: 1,
-        //borderColor: '#ccc',
+        justifyContent: 'center',       
       },
       buttonText: {
         color: '#fff',
         fontSize: 15,
+        paddingHorizontal: 12,
         //fontWeight: '400',
         letterSpacing: 0.3,
-        marginLeft: 5, // Space between icon and text
+        //marginLeft: 3, // Space between icon and text
       },
       icon: {
-        marginRight: 5, // Add some space around the icon
-        color: '#fff',
+        marginRight: 3, // Add some space around the icon
+        color: '#ffffff',padding: 5,
+        borderWidth: 1,
+         borderRadius: 5,
+         borderColor: '#fff',
+         backgroundColor: '#f0ba0aff'
       },
+      icon1: {
+        marginRight: 3, // Add some space around the icon
+        color: '#ffffff',padding: 5,
+        borderWidth: 1,
+         borderRadius: 5,
+         borderColor: '#fff',
+         backgroundColor: '#9c9c9cff'
+      },
+      
 });
 
 //export default ImprestSettlementStore;

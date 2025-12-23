@@ -525,9 +525,10 @@ export default function Invoicing() {
 
 
     const handleSubmit = async () => {
-        // Retrieve stored values from AsyncStorage
+        // Retrieve stored values from AsyncStorage        
         const loggedInEmpStore = await AsyncStorage.getItem('officeCode');
         const loggedState = await AsyncStorage.getItem('stateCd');
+        const loggedEmpPno = await AsyncStorage.getItem('empPno');
         // Validation function
         const isValid = (value) => value !== null && value !== undefined && value !== '';
         let validationFailed = false; // Flag to track validation failure
@@ -577,6 +578,8 @@ export default function Invoicing() {
                 { label: "P_STATE_CD", value: loggedState },
                 { label: "P_FSC_CD", value: loggedInEmpStore },
                 { label: "P_BATCH", value: row.batch && row.batch.trim() !== "" ? row.batch : "" },// Send empty string if empty
+                { label: "P_CUST_ID", value: selectedCustId },// Send empty string if empty
+                { label: "P_PNO", value: loggedEmpPno },// Send empty string if empty
             ];
             
             const postData = {
@@ -585,7 +588,7 @@ export default function Invoicing() {
                 apiId: '33'                       
             };
 
-            //console.log("List of products to submit:", dataToSubmit);
+            // console.log("List of products to submit:", dataToSubmit);
 
             try {
                 const response = await fetch('https://ebazarapi.iffco.in/API', {
@@ -648,6 +651,10 @@ export default function Invoicing() {
                     setSelectedCustPhone('');
                     setSelectedCustState('');
                     setPaymentMethod('');
+                    setShowList(false);
+                    setSendWhatsapp(false);
+                    setSearchQuery('');
+                    setSearchPrdQuery('');
 
                     // Reset rows after successful submission
                     setRows(prevRows => 
@@ -673,16 +680,25 @@ export default function Invoicing() {
             } catch (error) {
                 //console.error('Error saving data:', error);
                 setAlert({ visible: true, title: "Error", message: `There was an error saving a invoices: ${error.message}`, type: "error" });
+            } finally {
+                setLoading(false);
             }
         }      
+        //console.log(sendWhatsapp)
         
         // 2️⃣ Call WhatsApp API ONLY if checked
         if (sendWhatsapp) {
             await sendWhatsappInvoice();
         }
+        // // Optional: small delay so user sees success message
+        // setTimeout(() => {
+        //     navigation.goBack(); // ⬅️ Same as header back arrow
+        // }, 800);
+
     };
 
     const sendWhatsappInvoice = async () => {
+        // console.log("whatsapp message sent");
         const url ='https://ebazar.iffco.coop/api/job/SendInvoices?invoiceType=B2C%20INVOICE&sendFlag=Y';
         const response = await fetch(url, {
             method: 'POST',
@@ -783,6 +799,7 @@ export default function Invoicing() {
     };
 
     const openModalProd = () => {
+        //console.log("button preesed");
         fetchProduct();
         setProdModalVisible(true);
     };
@@ -988,7 +1005,7 @@ export default function Invoicing() {
                                     <Ionicons name="search" size={20} color="white" />                                   
                                 </TouchableOpacity>
                                 <TextInput
-                                    style={[styles.input, { width: '99%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -32}]}
+                                    style={[styles.input, { width: '100%', color: '#333', backgroundColor: '#f0f0f0', paddingLeft: 37, marginLeft: -28}]}
                                     placeholder="--Select Product--"
                                     value={item.prdname}
                                     placeholderTextColor="#a3a3a3"
@@ -1797,17 +1814,22 @@ const styles = StyleSheet.create({
         borderBottomColor: '#ccc',
     },
     searchInput: {
-        minHeight: 35,
+        minHeight: 36,
+        paddingVertical: 6,
+        //paddingHorizontal: 10,
         fontSize: 15,
-        letterSpacing: 0.3,
-        color: '#333',
-      },
+        lineHeight: 22,
+        letterSpacing: 0.25,
+        color: '#333333',
+        backgroundColor: '#FFFFFF',
+        borderRadius: 4,
+        },
     cell: {
         flex: 1,
         textAlign: 'right',
-        paddingRight: 5,
-        paddingVertical: 5,
-        paddingLeft: 5,
+        //paddingRight: 5,
+        paddingVertical: 6,
+        paddingHorizontal: 5,
         borderRightWidth: 1,
         borderColor: '#ccc',
         width: '100%',
